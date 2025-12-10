@@ -6,9 +6,9 @@
 GPU内存共享: 使用gpu时，尽量使用remote tensor，减少cpu/gpu之间的copy。  <br>
 高性能: 不同模块之间，是否可以并行。    <br>
 
-#### 模块化
+## 模块化
 
-基类
+`基类`
 ```
 class IBaseModule {
 public:
@@ -21,7 +21,7 @@ public:
 };
 ```
 
-图像预处理
+`图像预处理`
 ```
 class ImagePreprocessModule : public IBaseModule {
 public:    
@@ -29,7 +29,7 @@ public:
 };
 ```
 
-Pipeline:
+`Pipeline:`
 ```
 class PipelineExecutor {
 private:
@@ -49,7 +49,7 @@ public:
 };
 ```
 
-配置驱动
+`配置文件示例`
 ```
 # ----------------------------------------------------------------------
 # 全局配置 (GLOBAL CONFIGURATION) 待定，是否需要。
@@ -202,5 +202,5 @@ pipeline_modules:
 需要提供一个python脚本，将pipeline转换成pdf的graph显示，并简单校验链接关系。
 
 
-GPU内存共享:  TBD   <br>
-高性能:  TBD        <br>
+`GPU内存共享`:  TBD   <br>
+`高性能`:  TBD        <br>
