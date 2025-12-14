@@ -1,0 +1,53 @@
+# ----------------------------------------------------------------------
+# 全局配置 (GLOBAL CONFIGURATION) 待定，是否需要。
+# ----------------------------------------------------------------------
+global_context:
+  default_device: "GPU"
+  enable_shared_memory: True
+  device_id: "GPU.0"
+
+# ----------------------------------------------------------------------
+# 模块定义 (MODULES DEFINITION) - 修正了 YAML 引用和参数格式
+# ----------------------------------------------------------------------
+pipeline_modules:
+
+  # --- 0. Parameter 模块 ---
+  image:
+    type: "ParameterModule"
+    outputs:
+      - name: "image1_data"
+        type: "ov::Tensor"
+      - name: "image2_data"
+        type: "ov::Tensor"
+
+  # --- 1. 图像预处理模块 (Image Preprocessing) ---
+  image_preprocessor:
+    type: "ImagePreprocessModule"
+    device: "CPU"
+    inputs:
+      - name: "image_input_1"
+        source: "image.image1_data"
+      - name: "image_input_2"
+        source: "image.image2_data"
+    outputs:
+      - name: "raw_data"
+        type: "ov::Tensor"
+      - name: "thw"
+        type: "ov::Tensor"
+    params:
+      target_resolution: [224, 224]
+      mean: [0.485, 0.456, 0.406]
+      std: [0.229, 0.224, 0.225]
+
+  # --- 2. Result Module ---
+  pipeline_result:
+    type: "ResultModule"
+    description: "Collects final results and formats the output structure."
+    device: "CPU"
+    inputs:
+      - name: "raw_data"
+        source: "image_preprocessor.raw_data"
+
+    outputs:
+      - name: "raw_data"
+        type: "ov::Tensor"

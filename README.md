@@ -20,5 +20,7 @@ tar -xf openvino_toolkit_ubuntu22_2025.4.0.20398.8fdad55727d_x86_64.tgz
 
 Build GenAI
 ```
+sudo apt-get install libyaml-cpp-dev
+
 ./build_genai.sh
 ```
