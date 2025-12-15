@@ -2,6 +2,18 @@
 This is a POC of modular GenAI. The purpose is fast and easy to enable new model to GenAI.
 
 
+# Convert model
+Dependencies:
+```
+pip install openvino-tokenizers openvino nncf optimum[intel]
+pip install -U huggingface_hub
+```
+
+```
+model_id='Qwen/Qwen2.5-VL-3B-Instruct'
+optimum-cli export openvino --model $model_id --task image-text-to-text $model_id/INT4 --weight-format int4 --trust-remote-code
+```
+
 # Setup
 
 ```
