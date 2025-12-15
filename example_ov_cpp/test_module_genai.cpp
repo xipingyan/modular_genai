@@ -27,7 +27,7 @@ int test_genai_module_pipeline(int argc, char *argv[])
     ov::genai::module::ModulePipeline pipe(config_fn);
 
     std::string prompt = "Please describle this image";
-    ov::Tensor image = utils::load_image("/mnt/xiping/gpu_profiling/profiling_qwen2b_vl_instruction/test_video/cat_120_100.png");
+    ov::Tensor image = utils::load_image("./test_data/home.jpg");
 
     // std::cout << "question:\n";
     // std::getline(std::cin, prompt);
