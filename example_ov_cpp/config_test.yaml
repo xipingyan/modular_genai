@@ -16,7 +16,7 @@ pipeline_modules:
     type: "ParameterModule"
     outputs:
       - name: "prompts_data"
-        type: "std::vector<std::string>"
+        type: "VecString"
 
   image:
     type: "ParameterModule"
@@ -52,13 +52,14 @@ pipeline_modules:
     type: "TextEncoderModule"
     device: "GPU"
     inputs:
-      - name: "prompts"
+      - name: "prompts_input"
+        type: "VecString"
         source: "prompts.prompts_data"
     outputs:
       - name: "input_ids"
-        type: "ov::RemoteTensor"
+        type: "OVTensor"
       - name: "mask"
-        type: "ov::RemoteTensor"
+        type: "OVTensor"
     params:
       model_path: "/mnt/disk2/Qwen2.5-VL-7B-Instruct-INT4"
 

@@ -26,7 +26,7 @@ int test_genai_module_pipeline(int argc, char *argv[])
     std::cout << "  == config_fn: " << config_fn << std::endl;
     ov::genai::module::ModulePipeline pipe(config_fn);
 
-    std::string prompt = "Please describle this image";
+    std::vector<std::string> prompt = {"Please describle this image"};
     ov::Tensor image = utils::load_image("./test_data/home.jpg");
 
     // std::cout << "question:\n";
@@ -38,7 +38,7 @@ int test_genai_module_pipeline(int argc, char *argv[])
         // pipe.start_chat();
 
         ov::AnyMap inputs;
-        inputs["prompts"] = prompt;
+        inputs["prompts_data"] = prompt;
         inputs["image1_data"] = image;
         inputs["image2_data"] = image;
 
