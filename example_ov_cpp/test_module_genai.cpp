@@ -38,7 +38,7 @@ int test_genai_module_pipeline(int argc, char *argv[])
         // pipe.start_chat();
 
         ov::AnyMap inputs;
-        inputs["prompts"] = prompt;
+        inputs["prompts_data"] = prompt;
         inputs["image1_data"] = image;
         inputs["image2_data"] = image;
 
