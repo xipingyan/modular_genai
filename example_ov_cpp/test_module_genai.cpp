@@ -26,7 +26,7 @@ int test_genai_module_pipeline(int argc, char *argv[])
     std::cout << "  == config_fn: " << config_fn << std::endl;
     ov::genai::module::ModulePipeline pipe(config_fn);
 
-    std::vector<std::string> prompt = {"Please describle this image"};
+    std::string prompt = "Please describle this image";
     ov::Tensor image = utils::load_image("./test_data/home.jpg");
 
     // std::cout << "question:\n";
