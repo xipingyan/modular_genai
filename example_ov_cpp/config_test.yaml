@@ -16,9 +16,9 @@ pipeline_modules:
     type: "ParameterModule"
     outputs:
       - name: "image1_data"
-        type: "ov::Tensor"
+        type: "OVTensor"
       - name: "image2_data"
-        type: "ov::Tensor"
+        type: "OVTensor"
 
   # --- 1. 图像预处理模块 (Image Preprocessing) ---
   image_preprocessor:
@@ -26,14 +26,16 @@ pipeline_modules:
     device: "CPU"
     inputs:
       - name: "image_input_1"
+        type: "OVTensor"
         source: "image.image1_data"
       - name: "image_input_2"
+        type: "OVTensor"
         source: "image.image2_data"
     outputs:
       - name: "raw_data"
-        type: "ov::Tensor"
+        type: "OVTensor"
       - name: "thw"
-        type: "ov::Tensor"
+        type: "OVTensor"
     params:
       target_resolution: [224, 224]
       mean: [0.485, 0.456, 0.406]
@@ -46,8 +48,9 @@ pipeline_modules:
     device: "CPU"
     inputs:
       - name: "raw_data"
+        type: "OVTensor"
         source: "image_preprocessor.raw_data"
 
     outputs:
       - name: "raw_data"
-        type: "ov::Tensor"
+        type: "OVTensor"

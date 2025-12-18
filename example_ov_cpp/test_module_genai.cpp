@@ -34,11 +34,13 @@ int test_genai_module_pipeline(int argc, char *argv[])
     for (int l = 0; l < 1; l++)
     {
         std::cout << "== Loop: [" << l << "] " << std::endl;
+        std::cout << "Input image1_data first value: " << (int)image.data<uint8_t>()[0] << ", data type: " << image.get_element_type() << std::endl;
         // pipe.start_chat();
 
         ov::AnyMap inputs;
         inputs["prompts"] = prompt;
-        inputs["image"] = image;
+        inputs["image1_data"] = image;
+        inputs["image2_data"] = image;
 
         auto t1 = std::chrono::high_resolution_clock::now();
         pipe.generate(inputs);
@@ -47,6 +49,9 @@ int test_genai_module_pipeline(int argc, char *argv[])
         // std::cout << "result: text =" << aa.texts[0].c_str() << ", score=" << aa.scores[0] << ", tm=" << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms" << std::endl;
 
         // pipe.finish_chat();
+
+        auto output_raw_data = pipe.get_output("raw_data").as<ov::Tensor>();
+        std::cout << "Output raw data first value: " << output_raw_data.data<float>()[0] << std::endl;
     }
     return EXIT_SUCCESS;
 }
