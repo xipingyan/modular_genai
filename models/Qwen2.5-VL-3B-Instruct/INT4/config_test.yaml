@@ -46,6 +46,7 @@ pipeline_modules:
       target_resolution: [224, 224]
       mean: [0.485, 0.456, 0.406]
       std: [0.229, 0.224, 0.225]
+      model_path: "openvino_vision_embeddings_model.xml"
 
   # --- 2. Prompt Encode 模块 ---
   prompt_encoder:

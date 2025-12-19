@@ -3,19 +3,23 @@
 
 #include "load_image.hpp"
 #include "my_utils.hpp"
-#include <openvino/genai/visual_language/pipeline.hpp>
 #include <filesystem>
 #include <chrono>
 
+#include <openvino/genai/module_genai/pipeline.hpp>
+
+void test_list_config() {
+    auto all_modules = ov::genai::module::ListAllModules();
+    ov::genai::module::PrintModuleConfig(all_modules[0]);
+
+    std::cout << "*** Start to print all modules' config. ***" << std::endl;
+    ov::genai::module::PrintAllModulesConfig();
+}
+
 int main(int argc, char *argv[])
 {
-    try
-    {
-        test_genai_module_pipeline(argc, argv);
-    }
-    catch (const std::exception &error)
-    {
-        std::cerr << "Catch exceptions: " << error.what() << '\n';
-    }
+    // test_genai_module_pipeline(argc, argv);
+    test_genai_vlm_pipeline(argc, argv);
+    // test_list_config();
     return EXIT_SUCCESS;
 }

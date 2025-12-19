@@ -6,4 +6,4 @@ source ../source_ov.sh
 
 cd ${SCRIPT_DIR_EXAMPLE_OV_CPP_RUN}
 
-./build/module_genai_app ./config_test.yaml
+./build/module_genai_app ../models/Qwen2.5-VL-3B-Instruct/INT4/config_test.yaml
