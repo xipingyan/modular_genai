@@ -3,3 +3,4 @@ openvino.genai
 openvino
 openvino_toolkit_*
 .vscode
+models
