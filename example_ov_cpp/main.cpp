@@ -18,8 +18,8 @@ void test_list_config() {
 
 int main(int argc, char *argv[])
 {
-    // test_genai_module_pipeline(argc, argv);
-    test_genai_vlm_pipeline(argc, argv);
+    test_genai_module_pipeline(argc, argv);
+    // test_genai_vlm_pipeline(argc, argv);
     // test_list_config();
     return EXIT_SUCCESS;
 }

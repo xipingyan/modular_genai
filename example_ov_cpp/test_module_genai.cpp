@@ -51,7 +51,11 @@ int test_genai_module_pipeline(int argc, char *argv[])
         // pipe.finish_chat();
 
         auto output_raw_data = pipe.get_output("raw_data").as<ov::Tensor>();
-        std::cout << "Output raw data first value: " << output_raw_data.data<float>()[0] << std::endl;
+        // std::cout << "Output raw data first value: " << output_raw_data.data<float>()[0] << std::endl;
+        std::cout << "output_raw_data shape: " << output_raw_data.get_shape() << std::endl;
+
+        auto output_source_size = pipe.get_output("source_size").as<std::vector<int>>();
+        std::cout << "output_source_size shape: [h=" << output_source_size[0] << ", w=" << output_source_size[1] << "]" << std::endl;
     }
     return EXIT_SUCCESS;
 }
