@@ -27,11 +27,13 @@ int test_genai_module_pipeline(int argc, char *argv[])
     ov::genai::module::ModulePipeline pipe(config_fn);
 
     std::string prompt = "Please describle this image";
+    std::string img_path = "./test_data/home.jpg";
+    img_path = "../openvino.genai/samples/cpp/module_genai/ut_test_data/cat_120_100.png";
     ov::Tensor image = utils::load_image("./test_data/home.jpg");
 
     // std::cout << "question:\n";
     // std::getline(std::cin, prompt);
-    for (int l = 0; l < 1; l++)
+    for (int l = 0; l < 10; l++)
     {
         std::cout << "== Loop: [" << l << "] " << std::endl;
         std::cout << "Input image1_data first value: " << (int)image.data<uint8_t>()[0] << ", data type: " << image.get_element_type() << std::endl;
@@ -46,7 +48,7 @@ int test_genai_module_pipeline(int argc, char *argv[])
         pipe.generate(inputs);
         // auto aa = pipe.generate(inputs, ov::genai::streamer(print_subword));
         auto t2 = std::chrono::high_resolution_clock::now();
-        // std::cout << "result: text =" << aa.texts[0].c_str() << ", score=" << aa.scores[0] << ", tm=" << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms" << std::endl;
+        std::cout << "time =" << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms" << std::endl;
 
         // pipe.finish_chat();
 
