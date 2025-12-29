@@ -9,9 +9,23 @@ pip install openvino-tokenizers openvino nncf optimum[intel]
 pip install -U huggingface_hub
 ```
 
+#### Qwen2.5-vl-3b
 ```
 model_id='Qwen/Qwen2.5-VL-3B-Instruct'
 optimum-cli export openvino --model $model_id --task image-text-to-text $model_id/INT4 --weight-format int4 --trust-remote-code
+```
+
+#### Z-Image
+Download model.
+
+```
+cd openvino.genai/samples/cpp/module_genai/ut_pipelines
+source ../../../../../python-env/bin/activate
+pip install modelscope
+modelscope download --model snake7gun/Z-Image-Turbo-fp16-ov
+
+mkdir Z-Image-Turbo-fp16-ov
+mv ~/.cache/modelscope/hub/models/snake7gun/Z-Image-Turbo-fp16-ov/ms-cbc5233d-ae5d-487b-bae1-f295fe5f46d3/* ./Z-Image-Turbo-fp16-ov/
 ```
 
 # Setup
