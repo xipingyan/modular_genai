@@ -1,17 +1,20 @@
-# Reprodue zimage
+# README
 
-https://github.com/ziyanxzy/dynamic-pipeline.git        <br>
-commit id: 9a9a16a85a155df160e5eeed537b7c602095f959     <br>
-
-#### 
+# Download zimage OV model
 
 ```
-python -m venv python-env
-source ./python-env/bin/activate
-pip install git+https://github.com/huggingface/diffusers
-pip install transformers
-
-cd dynamic-pipeline
-python run.py
-
+source ../../../../../python-env/bin/activate
+pip install modelscope
+cd ../openvino.genai/samples/cpp/module_genai/ut_pipelines/
+modelscope download --model snake7gun/Z-Image-Turbo-fp16-ov --local_dir ./
 ```
+
+#### optimum_ov
+
+Test z-image based on optimum-intel. ModulePipeline will follow this branch to implement z-image.
+
+Refer: optimum_ov/README.md
+
+#### pytorch_tiling
+
+Test tiling feature based on pytorch original model.
