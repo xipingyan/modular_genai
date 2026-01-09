@@ -289,7 +289,7 @@ def denoiser_loop_callback(
                     }
                 ],
                 'params': {
-                    'model_path': model_path
+                    'model_path': model_path,
                 }
             }
         }
@@ -350,9 +350,9 @@ def vae_decoder_wrapper(
     module_pipeline.generate(
         latents=Tensor(args[0].detach().cpu().contiguous().numpy()))
     module_output = torch.from_numpy(module_pipeline.get_output("image").data).to(torch.uint8)
-    image = torch.from_numpy(np.array(obj.image_processor.postprocess(image, output_type="pil")))
+    image_preprocessed = torch.from_numpy(np.array(obj.image_processor.postprocess(image.clone(), output_type="pil")))
 
-    print("    Result check:", "PASS" if torch.allclose(image.float(), module_output.float(), atol=10) else "FAIL")
+    print("    Result check:", "PASS" if torch.allclose(image_preprocessed.float(), module_output.float(), atol=10) else "FAIL")
     return image
 
 if __name__ == "__main__":
