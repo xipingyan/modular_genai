@@ -1,3 +1,5 @@
+import argparse
+import json
 import PIL.Image
 from optimum.intel import OVZImagePipeline
 from diffusers.image_processor import VaeImageProcessor
@@ -10,9 +12,7 @@ import PIL
 import openvino_genai
 import yaml
 import numpy as np
-
-device = "CPU"
-model_path = "../../../openvino.genai/samples/cpp/module_genai/ut_pipelines/Z-Image-Turbo-fp16-ov"
+from tensor_utils import dump_tensor
 
 class TestOVZImagePipeline(OVZImagePipeline):
     def set_callbacks(self, callbacks: Dict[str, Callable[..., Any]]) -> None:
@@ -43,7 +43,8 @@ class TestOVZImagePipeline(OVZImagePipeline):
         cfg_normalization: bool = False,
         cfg_truncation: float = 1.0,
         num_images_per_prompt: Optional[int] = 1,
-        max_sequence_length: int = 512) -> None:
+        max_sequence_length: int = 512,
+        dump_input_output: bool = False) -> None:
 
         height = height or 512
         width = width or 512
@@ -55,6 +56,8 @@ class TestOVZImagePipeline(OVZImagePipeline):
         self.scaling_factor = self.vae.config.scaling_factor
         self.shift_factor = self.vae.config.shift_factor
         self.image_processor = VaeImageProcessor(vae_scale_factor=self.vae_scale_factor * 2)
+        self.dump_input_output = dump_input_output
+        self.device_ = device
         if height % vae_scale != 0:
             raise ValueError(
                 f"Height must be divisible by {vae_scale} (got {height}). "
@@ -87,7 +90,7 @@ class TestOVZImagePipeline(OVZImagePipeline):
             torch.float32,
             "cpu",
             torch.Generator(device="cpu").manual_seed(seed))
-        original_latents = Tensor(latents.clone().detach().cpu().contiguous().numpy())
+        original_latents = latents.clone()
                         
         if num_images_per_prompt > 1:
             prompt_embeds = [pe for pe in prompt_embeds for _ in range(num_images_per_prompt)]
@@ -186,6 +189,7 @@ class TestOVZImagePipeline(OVZImagePipeline):
         
         if self.callbacks is not None and "denoiser_loop" in self.callbacks:
             self.callbacks["denoiser_loop"](
+                self,
                 prompt_embeds, 
                 negative_prompt_embeds,
                 latents,
@@ -208,6 +212,11 @@ class TestOVZImagePipeline(OVZImagePipeline):
         # pil_image = image_processor.numpy_to_pil(image)
         # pil_image[0].save("zimage_output.png")
 
+    def set_model_path(self, model_path: str) -> None:
+        self.model_path = model_path
+
+    def set_device(self, device: str) -> None:
+        self.device_ = device
 
 def text_encoder_wrapper(
         obj,
@@ -216,9 +225,57 @@ def text_encoder_wrapper(
     print("Text Encoder:")
     (prompt_embeds, negative_prompt_embeds) = original_encode_prompt(*args, **kwargs)
     # TODO: Add module pipeline result check
+    if obj.dump_input_output == True or obj.dump_input_output == "True":
+        dump_tensor(prompt_embeds[0], "text_encoder_output_prompt_embeds")
+
+    cfg = {
+        'global_context': {
+            'model_type': 'zimage'
+        },
+        'pipeline_modules': {
+            'text_encoder': {
+                'type': 'ClipTextEncoderModule',
+                'device': obj.device_,
+                'description': 'Encode positive prompt and negative prompt',
+                'inputs': [
+                    {
+                        'name': 'prompt',
+                        'type': 'String'
+                    },
+                    {
+                        'name': 'guidance_scale',
+                        'type': 'Float'
+                    },
+                    {
+                        'name': 'max_sequence_length',
+                        'type': 'Int'
+                    }
+                ],
+                'outputs': [
+                    {
+                        'name': 'prompt_embeds',
+                        'type': 'VecOVTensor'
+                    }
+                ],
+                'params': {
+                    'model_path': obj.model_path,
+                }
+            }
+        }
+    }
+
+    module_pipeline = openvino_genai.ModulePipeline(config_yaml_content=yaml.dump(cfg))
+    module_pipeline.generate(
+        prompt=kwargs['prompt'],
+        guidance_scale= 1.0 if kwargs['do_classifier_free_guidance'] else 0.0,
+        max_sequence_length=kwargs['max_sequence_length'])
+    module_output = torch.from_numpy(module_pipeline.get_output("prompt_embeds")[0].data)
+    print("    Result check:", "PASS" if torch.allclose(prompt_embeds[0], module_output, atol=1e-5) else "FAIL")
+
     return prompt_embeds, negative_prompt_embeds
 
 def denoiser_loop_callback(
+        obj,
         prompt_embeds: List[torch.FloatTensor],
         negative_prompt_embeds: Optional[List[torch.FloatTensor]],
         latents: torch.FloatTensor,
@@ -238,7 +295,7 @@ def denoiser_loop_callback(
         'pipeline_modules': {
             'denoiser_loop': {
                 'type': 'ZImageDenoiserLoopModule',
-                'device': device,
+                'device': obj.device_,
                 'description': 'Z-Image denoiser loop.',
                 'inputs': [
                     {
@@ -289,11 +346,17 @@ def denoiser_loop_callback(
                     }
                 ],
                 'params': {
-                    'model_path': model_path
+                    'model_path': args.model_path
                 }
             }
         }
     }
+
+    if obj.dump_input_output == True or obj.dump_input_output == "True":
+        dump_tensor(prompt_embeds[0], "denoiser_loop_input_prompt_embed")
+        dump_tensor(init_latents, "denoiser_loop_input_init_latents")
+        dump_tensor(latents, "denoiser_loop_output_latents")
+
     module_pipeline = openvino_genai.ModulePipeline(config_yaml_content=yaml.dump(cfg))
     module_pipeline.generate(
         prompt_embed=Tensor(prompt_embeds[0].detach().cpu().contiguous().numpy()),
@@ -303,7 +366,7 @@ def denoiser_loop_callback(
         num_images_per_prompt=num_images_per_prompt,
         seed=seed,
         guidance_scale=guidance_scale,
-        init_latents=init_latents)
+        init_latents=Tensor(init_latents.detach().cpu().contiguous().numpy()))
     module_output = torch.from_numpy(module_pipeline.get_output("latents").data)
     print("    Result check:", "PASS" if torch.allclose(latents, module_output, atol=1e-5) else "FAIL")
 
@@ -316,6 +379,10 @@ def vae_decoder_wrapper(
     latents = (latents + obj.shift_factor) / obj.scaling_factor
     image = original_vae_decode(latents, **kwargs)[0]
 
+    if obj.dump_input_output == True or obj.dump_input_output == "True":
+        dump_tensor(latents, "vae_decoder_input_latents")
+        dump_tensor(image, "vae_decoder_output_image")
+
     cfg = {
         'global_context': {
             'model_type': 'zimage'
@@ -323,7 +390,7 @@ def vae_decoder_wrapper(
         'pipeline_modules': {
             'vae_decoder': {
                 'type': 'VAEDecoderModule',
-                'device': device,
+                'device': obj.device_,
                 'description': 'VAE image decoder.',
                 'inputs': [
                     {
@@ -339,7 +406,7 @@ def vae_decoder_wrapper(
                     }
                 ],
                 'params': {
-                    'model_path': model_path,
+                    'model_path': obj.model_path,
                     'enable_postprocess': 'true'
                 }
             }
@@ -356,9 +423,14 @@ def vae_decoder_wrapper(
     return image
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('model_path', default="../../../openvino.genai/samples/cpp/module_genai/ut_pipelines/Z-Image-Turbo-fp16-ov", help="Path to the directory of z image model")
+    parser.add_argument("device", default="CPU", help="Device to use")
+    parser.add_argument("dump_input_output", default=False, help="Dump input/output tensors of each module")
+    args = parser.parse_args()
     pipeline = TestOVZImagePipeline.from_pretrained(
-        model_path,
-        device=device,
+        args.model_path,
+        device=args.device,
         ov_config={})
     
     callbacks = {
@@ -368,13 +440,15 @@ if __name__ == "__main__":
     }
 
     pipeline.set_callbacks(callbacks)
+    pipeline.set_model_path(args.model_path)
+    pipeline.set_device(args.device)
 
     pipeline(
         prompt="A beautiful landscape painting of mountains during sunset",
         height=512,
         width=512,
         num_inference_steps=2,
-        device=device,
-        guidance_scale=0.0)
-    
-    
+        device=args.device,
+        guidance_scale=0.0,
+        dump_input_output=args.dump_input_output)
+
