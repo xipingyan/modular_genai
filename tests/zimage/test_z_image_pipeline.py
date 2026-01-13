@@ -299,6 +299,11 @@ def denoiser_loop_callback(
                 'description': 'Z-Image denoiser loop.',
                 'inputs': [
                     {
+                        'name': 'latents',
+                        'type': 'OVTensor',
+                        'source': "pipeline_params.latents"
+                    },
+                    {
                         'name': 'prompt_embed',
                         'type': 'OVTensor',
                         'source': "pipeline_params.prompt_embed"
@@ -309,34 +314,9 @@ def denoiser_loop_callback(
                         'source': "pipeline_params.num_inference_steps"
                     },
                     {
-                        'name': 'width',
-                        'type': 'Int',
-                        'source': "pipeline_params.width"
-                    },
-                    {
-                        'name': 'height',
-                        'type': 'Int',
-                        'source': "pipeline_params.height"
-                    },
-                    {
-                        'name': 'num_images_per_prompt',
-                        'type': 'Int',
-                        'source': "pipeline_params.num_images_per_prompt"
-                    },
-                    {
-                        'name': 'seed',
-                        'type': 'Int',
-                        'source': "pipeline_params.seed"
-                    },
-                    {
                         'name': 'guidance_scale',
                         'type': 'Float',
                         'source': "pipeline_params.guidance_scale"
-                    },
-                    {
-                        'name': 'init_latents',
-                        'type': 'OVTensor',
-                        'source': "pipeline_params.init_latents"
                     }
                 ],
                 'outputs': [
@@ -359,14 +339,10 @@ def denoiser_loop_callback(
 
     module_pipeline = openvino_genai.ModulePipeline(config_yaml_content=yaml.dump(cfg))
     module_pipeline.generate(
+        latents=Tensor(init_latents.detach().cpu().contiguous().numpy()),
         prompt_embed=Tensor(prompt_embeds[0].detach().cpu().contiguous().numpy()),
-        width=width,
-        height=height,
         num_inference_steps=num_inference_steps,
-        num_images_per_prompt=num_images_per_prompt,
-        seed=seed,
-        guidance_scale=guidance_scale,
-        init_latents=Tensor(init_latents.detach().cpu().contiguous().numpy()))
+        guidance_scale=guidance_scale)
     module_output = torch.from_numpy(module_pipeline.get_output("latents").data)
     print("    Result check:", "PASS" if torch.allclose(latents, module_output, atol=1e-5) else "FAIL")
 
@@ -445,8 +421,8 @@ if __name__ == "__main__":
 
     pipeline(
         prompt="A beautiful landscape painting of mountains during sunset",
-        height=512,
-        width=512,
+        height=128,
+        width=128,
         num_inference_steps=2,
         device=args.device,
         guidance_scale=0.0,
