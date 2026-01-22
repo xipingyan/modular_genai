@@ -7,7 +7,7 @@
 #include <filesystem>
 #include <chrono>
 
-static std::string get_config_ymal_path(int argc, char *argv[]) {
+static std::filesystem::path get_config_ymal_path(int argc, char *argv[]) {
     if (argc > 1) {
         return std::string(argv[1]);
     }
@@ -22,14 +22,14 @@ static bool print_subword(std::string &&subword)
 int test_genai_module_pipeline(int argc, char *argv[])
 {
     std::cout << "== Init ModulePipeline" << std::endl;
-    std::string config_fn = get_config_ymal_path(argc, argv);
+    auto config_fn = get_config_ymal_path(argc, argv);
     std::cout << "  == config_fn: " << config_fn << std::endl;
     ov::genai::module::ModulePipeline pipe(config_fn);
 
     std::string prompt = "Please describle this image";
     std::string img_path = "./test_data/home.jpg";
-    img_path = "../openvino.genai/samples/cpp/module_genai/ut_test_data/cat_120_100.png";
-    ov::Tensor image = utils::load_image("./test_data/home.jpg");
+    img_path = "../openvino.genai/tests/module_genai/cpp/test_data/cat_120_100.png";
+    ov::Tensor image = utils::load_image(img_path);
 
     // std::cout << "question:\n";
     // std::getline(std::cin, prompt);

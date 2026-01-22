@@ -14,7 +14,9 @@ else()
     message(FATAL_ERROR "OpenCV not found! Check your installation and environment.")
 endif()
 
-add_executable(${TARGET_NAME} main.cpp load_image.cpp test_module_genai.cpp test_vlm_genai.cpp)
+# Auto load all cpp files
+file(GLOB CPP_SOURCES "*.cpp")
+add_executable(${TARGET_NAME} ${CPP_SOURCES})
 
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOUCE_DIR}" "${CMAKE_BINARY_DIR}" "${OpenCV_INCLUDE_DIRS}")
 

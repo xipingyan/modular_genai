@@ -16,3 +16,4 @@ ov::Tensor create_countdown_frames();
 
 int test_genai_module_pipeline(int argc, char* argv[]);
 int test_genai_vlm_pipeline(int argc, char* argv[]);
+int test_call_ov_directly(int argc, char *argv[]);
