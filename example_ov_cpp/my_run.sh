@@ -1,6 +1,9 @@
 SCRIPT_DIR_EXAMPLE_OV_CPP_RUN="$(dirname "$(readlink -f "$BASH_SOURCE")")"
 cd ${SCRIPT_DIR_EXAMPLE_OV_CPP_RUN}
 
+# export OV_GPU_DisableOnednn=1
+# rm -rf ./my_cache_dir/*.weights_cache 
+
 source ../python-env/bin/activate
 source ../source_ov.sh
 
