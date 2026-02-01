@@ -2,3 +2,4 @@ build
 prompt.txt
 test_data
 my_cache_dir
+dump_*
