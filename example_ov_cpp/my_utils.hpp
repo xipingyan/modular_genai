@@ -26,6 +26,8 @@ inline bool readFileToString(const std::string &filename, std::string &content)
     return true;
 }
 
+bool save_image_bmp(const std::string& filename, const ov::Tensor& image, bool convert_rgb2bgr = true);
+
 class CTestParam {
     public:
     CTestParam(){}

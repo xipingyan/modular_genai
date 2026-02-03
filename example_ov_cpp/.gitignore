@@ -3,3 +3,5 @@ prompt.txt
 test_data
 my_cache_dir
 dump_*
+profile_*.json
+*.bmp

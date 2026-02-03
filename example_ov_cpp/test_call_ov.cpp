@@ -10,6 +10,8 @@
 #include <thread>
 #include <cstdlib>
 
+#if 0
+
 #define TEST_TRANSFORMER_MODEL 0
 
 // Return GPU USM memory usage in MB, or -1 if could not query
@@ -200,22 +202,27 @@ int test_call_ov_directly(int argc, char *argv[])
 
     ov::Core core;
     auto model = core.read_model(model_path);
-
-    auto t1 = std::chrono::high_resolution_clock::now();
     auto compiled_model = core.compile_model(model, "GPU", cfg);
-    auto t2 = std::chrono::high_resolution_clock::now();
-    PRINT_TM(t1, t2, "--> CompileModel time");
-    ov::Tensor output_tensor, expected_tensor;
+    ov::Tensor output_tensor;
 
     std::vector<ov::Tensor> inputs = load_input_tensors(core);
-    expected_tensor = ov_infer(compiled_model, core, inputs);
+    auto expected_tensor = ov_infer(compiled_model, core, inputs);
 
-    for (size_t i = 0; i < 2; i++)
+    for (size_t i = 0; i < 4; i++)
     {
+        auto t1 = std::chrono::high_resolution_clock::now();
         compiled_model.load_model_weights();
+        auto t2 = std::chrono::high_resolution_clock::now();
+        PRINT_TM(t1, t2, "Load model weights time");
+
         output_tensor = ov_infer(compiled_model, core, inputs);
+
+        auto t3 = std::chrono::high_resolution_clock::now();
         compiled_model.release_model_weights();
-        print_output(output_tensor);
+        auto t4 = std::chrono::high_resolution_clock::now();
+        PRINT_TM(t3, t4, "Release model weights time");
+
+        // print_output(output_tensor);
     }
 
     auto is_same = compare_output(output_tensor, expected_tensor);
@@ -223,3 +230,4 @@ int test_call_ov_directly(int argc, char *argv[])
 
     return EXIT_SUCCESS;
 }
+#endif

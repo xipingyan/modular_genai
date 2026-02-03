@@ -7,8 +7,10 @@
 #include <filesystem>
 #include <chrono>
 
-static std::filesystem::path get_config_ymal_path(int argc, char *argv[]) {
-    if (argc > 1) {
+static std::filesystem::path get_config_ymal_path(int argc, char *argv[])
+{
+    if (argc > 1)
+    {
         return std::string(argv[1]);
     }
     return "config.yaml";
@@ -17,6 +19,42 @@ static std::filesystem::path get_config_ymal_path(int argc, char *argv[]) {
 static bool print_subword(std::string &&subword)
 {
     return !(std::cout << subword << std::flush);
+}
+
+int test_module_genai_pipeline_z_img(int argc, char *argv[])
+{
+    std::cout << "== Init ModulePipeline" << std::endl;
+    std::filesystem::path config_path = get_config_ymal_path(argc, argv);
+    std::cout << "  == config_fn: " << config_path << std::endl;
+    ov::genai::module::ModulePipeline pipe(config_path);
+
+    std::string prompt = "A beautiful landscape painting by Claude Monet";
+    int width = 512;
+    int height = 512;
+    int num_inference_steps = 9;
+    float guidance_scale = 2.0;
+    int max_sequence_length = 512;
+
+    ov::AnyMap inputs;
+    inputs["prompt"] = prompt;
+    inputs["width"] = width;
+    inputs["height"] = height;
+    inputs["num_inference_steps"] = num_inference_steps;
+    inputs["guidance_scale"] = guidance_scale;
+    inputs["max_sequence_length"] = max_sequence_length;
+
+    for (int loop = 0; loop < 3; loop++)
+    {
+        std::cout << "== Loop: [" << loop << "] " << std::endl;
+        pipe.generate(inputs);
+    }
+
+    ov::Tensor generated_image = pipe.get_output("generated_image").as<ov::Tensor>();
+
+    std::string output_name = "./generated_image.bmp";
+    std::cout << "Generated image shape: " << generated_image.get_shape() << ", output_name: " << output_name << std::endl;
+    save_image_bmp("generated_image.bmp", generated_image);
+    return EXIT_SUCCESS;
 }
 
 int test_genai_module_pipeline(int argc, char *argv[])
