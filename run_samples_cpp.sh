@@ -59,6 +59,7 @@ if [[ "$RUN_GEN_VIDEO" == "1" ]]; then
     cfg=./samples/cpp/module_genai/config_yaml/Wan2.1-T2V-1.3B-Diffusers/config.yaml
     # cfg=./samples/cpp/module_genai/config_yaml/Wan2.1-T2V-1.3B-Diffusers/config_split_transformer.yaml
     prompt="A cat and a dog baking a cake together in a kitchen. The cat is carefully measuring flour, while the dog is stirring the batter with a wooden spoon. The kitchen is cozy, with sunlight streaming through the window."
+    neg_prompt="Bright tones, overexposed, static, blurred details, subtitles, style, works, paintings, images, static, overall gray, worst quality, low quality, JPEG compression residue, ugly, incomplete, extra fingers, poorly drawn hands, poorly drawn faces, deformed, disfigured, misshapen limbs, fused fingers, still picture, messy background, three legs, many people in the background, walking backwards"
 
-    "$app" -cfg "$cfg" -prompt "$prompt" --height 128 --width 128 --num_frames 10 --num_inference_steps 9 --fps 5
+    "$app" -cfg "$cfg" -prompt "$prompt" --negative_prompt $neg_prompt --num_frames 16 --height 240 --width 240 --steps 9
 fi
