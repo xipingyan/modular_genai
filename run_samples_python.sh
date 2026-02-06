@@ -47,14 +47,21 @@ fi
 
 # Run MD Image Generation Sample
 if [[ "$RUN_GEN_IMG" == "1" ]]; then
-    app=./samples/python/module_genai/md_image_generation.py
-    prompt="A beautiful landscape painting by Claude Monet"
+    cd ./samples/python/module_genai/
+    python md_image_generation.py \
+        --model_path ./tests/module_genai/cpp/test_models/Z-Image-Turbo-fp16-ov/   \
+        --height 256    \
+        --width 256     \
+        --steps 1 \
+        --prompt "A beautiful landscape painting by Claude Monet"
+fi
 
-    python "$app" \
-        --model_path ./tests/module_genai/cpp/test_models/Z-Image-Turbo-fp16-ov \
-        --device GPU \
-        --prompt "$prompt" \
-        --height 512 \
-        --width 512 \
-        --steps 9
+# Run MD Video Generation Sample
+if [[ "$RUN_GEN_IMG" == "1" ]]; then
+    cd ./samples/python/module_genai/
+    python md_video_generation.py \
+        --model_path ./tests/module_genai/cpp/test_models/Wan2.1-T2V-1.3B-Diffusers/   \
+        --height 128    \
+        --width 128     \
+        --prompt "A cat and a dog baking a cake together in a kitchen. The cat is carefully measuring flour, while the dog is stirring the batter with a wooden spoon. The kitchen is cozy, with sunlight streaming through the window."
 fi
