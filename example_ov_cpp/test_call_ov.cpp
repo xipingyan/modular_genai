@@ -9,10 +9,9 @@
 #include "openvino/runtime/intel_gpu/properties.hpp"
 #include <thread>
 #include <cstdlib>
+#include "utils_test_model.hpp"
 
-#if 0
-
-#define TEST_TRANSFORMER_MODEL 0
+#if 1
 
 // Return GPU USM memory usage in MB, or -1 if could not query
 inline int get_gpu_usm(ov::Core &core)
@@ -22,6 +21,7 @@ inline int get_gpu_usm(ov::Core &core)
         std::map<std::string, uint64_t> properties;
         properties = core.get_property("GPU", ov::intel_gpu::memory_statistics);
         return properties["usm_device"] / 1024 / 1024;
+        // return properties["usm_device"];
     }
     catch (const std::exception &e)
     {
@@ -36,14 +36,11 @@ ov::Tensor ov_infer(ov::CompiledModel &compiled_model, ov::Core &core, const std
 
     auto remoteContext = compiled_model.get_context();
 
-#if TEST_TRANSFORMER_MODEL
-    infer_request.set_tensor("hidden_states", inputs[0]);
-    infer_request.set_tensor("encoder_hidden_states", inputs[1]);
-    infer_request.set_tensor("timestep", inputs[2]);
-#else
-    // Set the input tensor
-    infer_request.set_input_tensor(inputs[0]);
-#endif
+    // set input tensor
+    for (size_t i = 0; i < inputs.size(); i++)
+    {
+        infer_request.set_input_tensor(inputs[i]);
+    }
 
     for (size_t i = 0; i < 1; i++)
     {
@@ -128,69 +125,13 @@ inline bool print_output(ov::Tensor &output_tensor)
     return true;
 }
 
-std::vector<ov::Tensor> load_input_tensors(ov::Core &core)
-{
-    std::vector<ov::Tensor> inputs;
-#if TEST_TRANSFORMER_MODEL
-    // hidden_states[1,16,16,16,16]
-    ov::Shape input_shape = {1, 16, 16, 16, 16};
-    ov::element::Type input_type = ov::element::f32;
-    ov::Tensor input_tensor(input_type, input_shape);
-    float *input_data = input_tensor.data<float>();
-    for (size_t i = 0; i < input_tensor.get_size(); ++i)
-    {
-        input_data[i] = static_cast<float>(i) / input_tensor.get_size();
-    }
-    inputs.push_back(input_tensor);
-
-    // encoder_hidden_states[1,101,2560]
-    ov::Shape enc_shape = {1, 101, 2560};
-    ov::element::Type enc_type = ov::element::f32;
-    ov::Tensor enc_tensor(enc_type, enc_shape);
-    float *enc_data = enc_tensor.data<float>();
-    for (size_t i = 0; i < enc_tensor.get_size(); ++i)
-    {
-        enc_data[i] = static_cast<float>(i) / enc_tensor.get_size();
-    }
-    inputs.push_back(enc_tensor);
-
-    // timestep[1]
-    ov::Shape time_shape = {1};
-    ov::element::Type time_type = ov::element::f32;
-    ov::Tensor time_tensor(time_type, time_shape);
-    float *time_data = time_tensor.data<float>();
-    for (size_t i = 0; i < time_tensor.get_size(); ++i)
-    {
-        time_data[i] = static_cast<float>(i) / time_tensor.get_size();
-    }
-    inputs.push_back(time_tensor);
-#else
-    // Create a dummy input tensor with the expected shape and type
-    ov::Shape input_shape = {1, 16, 64, 64};
-    ov::element::Type input_type = ov::element::f32;
-    ov::Tensor input_tensor(input_type, input_shape);
-
-    // Fill the input tensor with some data (e.g., random values)
-    float *input_data = input_tensor.data<float>();
-    for (size_t i = 0; i < input_tensor.get_size(); ++i)
-    {
-        input_data[i] = static_cast<float>(i) / input_tensor.get_size();
-    }
-    inputs.push_back(input_tensor);
-#endif
-    return inputs;
-}
-
 int test_call_ov_directly(int argc, char *argv[])
 {
     std::cout << "== Test call OpenVINO directly ==" << std::endl;
-    // z-image vae decoder model path
-    std::string model_path = "../openvino.genai/tests/module_genai/cpp/test_models/Z-Image-Turbo-fp16-ov/vae_decoder/openvino_model.xml";
-    std::string model_path_bin = "../openvino.genai/tests/module_genai/cpp/test_models/Z-Image-Turbo-fp16-ov/vae_decoder/openvino_model.bin";
+    ov::Core core;
 
-#if TEST_TRANSFORMER_MODEL
-    model_path = "../openvino.genai/tests/module_genai/cpp/test_models/Z-Image-Turbo-fp16-ov/transformer/openvino_model.xml";
-#endif
+    // TestModel::PTR test_model = TestModel::create(TestModelType::VAE_DECODER, core);
+    TestModel::PTR test_model = TestModel::create(TestModelType::QWEN2_5_VL_TEXT_EMB_MODEL, core);
 
     ov::AnyMap cfg;
     // cff = {
@@ -198,31 +139,46 @@ int test_call_ov_directly(int argc, char *argv[])
     //     {ov::cache_dir("./my_cache_dir")}};
     // cfg[ov::enable_weightless.name()] = true;
     cfg[ov::cache_dir.name()] = std::string("./my_cache_dir");
-    cfg[ov::weights_path.name()] = model_path_bin;
+    cfg[ov::weights_path.name()] = test_model->get_model_path_bin();
 
-    ov::Core core;
-    auto model = core.read_model(model_path);
+    auto model = test_model->get_model();
     auto compiled_model = core.compile_model(model, "GPU", cfg);
     ov::Tensor output_tensor;
 
-    std::vector<ov::Tensor> inputs = load_input_tensors(core);
-    auto expected_tensor = ov_infer(compiled_model, core, inputs);
+    std::vector<ov::Tensor> inputs = test_model->get_input();
+    std::vector<ov::Tensor> inputs_rt;
+    for (const auto& input : inputs)
+    {
+        auto remoteContext = compiled_model.get_context();
+        auto remoteTensor = remoteContext.create_tensor(input.get_element_type(), input.get_shape());
+        remoteTensor.copy_from(input);
+        inputs_rt.push_back(remoteTensor);
+    }
+
+    auto expected_tensor = ov_infer(compiled_model, core, inputs_rt);
+
+    // std::cout << "      Before: release_model_weights = " << get_gpu_usm(core) << " MB" << std::endl;
+    compiled_model.release_model_weights();
+    // std::cout << "      After: release_model_weights = " << get_gpu_usm(core) << " MB" << std::endl;
 
     for (size_t i = 0; i < 4; i++)
     {
+        std::cout << "===> " << i << std::endl;
         auto t1 = std::chrono::high_resolution_clock::now();
         compiled_model.load_model_weights();
         auto t2 = std::chrono::high_resolution_clock::now();
         PRINT_TM(t1, t2, "Load model weights time");
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-        output_tensor = ov_infer(compiled_model, core, inputs);
+        output_tensor = ov_infer(compiled_model, core, inputs_rt);
 
         auto t3 = std::chrono::high_resolution_clock::now();
         compiled_model.release_model_weights();
         auto t4 = std::chrono::high_resolution_clock::now();
         PRINT_TM(t3, t4, "Release model weights time");
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
-        // print_output(output_tensor);
+        print_output(output_tensor);
     }
 
     auto is_same = compare_output(output_tensor, expected_tensor);
