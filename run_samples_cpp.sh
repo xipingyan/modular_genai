@@ -23,11 +23,13 @@ set -u
 
 cd "${SCRIPT_DIR_RUN_GENAI_SAMPLES}/openvino.genai"
 RUN_VLM="${RUN_VLM:-0}"
+RUN_OMNI="${RUN_OMNI:-0}"
 RUN_GEN_IMG="${RUN_GEN_IMG:-0}"
 RUN_GEN_VIDEO="${RUN_GEN_VIDEO:-0}"
 
 echo "Running GenAI samples with settings:"
 echo "  RUN_VLM=$RUN_VLM"
+echo "  RUN_OMNI=$RUN_OMNI"
 echo "  RUN_GEN_IMG=$RUN_GEN_IMG"
 echo "  RUN_GEN_VIDEO=$RUN_GEN_VIDEO"
 
@@ -39,6 +41,19 @@ if [[ "$RUN_VLM" == "1" ]]; then
     cfg=./samples/cpp/module_genai/config_yaml/Qwen2.5-VL-3B-Instruct/config.yaml
     prompt="Please describe the image"
     img=./tests/module_genai/cpp/test_data/cat_120_100.png
+
+    "$app" -cfg "$cfg" -prompt "$prompt" -img "$img"
+fi
+
+# Run MD Omni Sample
+if [[ "$RUN_OMNI" == "1" ]]; then
+    app=./build/samples/cpp/module_genai/md_omni
+    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt.yaml
+    prompt="Shangehai is the largest city in China. Please describe Shanghai in detail:"
+    # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_image.yaml
+    prompt="Please describe the scene"
+    # img=./tests/module_genai/cpp/test_data/scene_120_100.png
+    img=./tests/module_genai/cpp/test_data/cars-1200-674.jpg
 
     "$app" -cfg "$cfg" -prompt "$prompt" -img "$img"
 fi
