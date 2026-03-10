@@ -33,7 +33,11 @@ echo "  RUN_OMNI=$RUN_OMNI"
 echo "  RUN_GEN_IMG=$RUN_GEN_IMG"
 echo "  RUN_GEN_VIDEO=$RUN_GEN_VIDEO"
 
-export OPENVINO_LOG_LEVEL=2
+# export DEVICE=GPU             # Specific device for testing, default is CPU
+export ENABLE_PROFILE=1         # Dump profiling data. default 0.
+# export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
+# export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
+# export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
 
 # Run MD Visual Language Chat Sample
 if [[ "$RUN_VLM" == "1" ]]; then
@@ -48,14 +52,14 @@ fi
 # Run MD Omni Sample
 if [[ "$RUN_OMNI" == "1" ]]; then
     app=./build/samples/cpp/module_genai/md_omni
-    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt.yaml
-    prompt="Shangehai is the largest city in China. Please describe Shanghai in detail:"
-    # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_image.yaml
+    # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt.yaml
+    # prompt="Shangehai is the largest city in China. Please describe Shanghai in detail:"
+    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_image.yaml
     prompt="Please describe the scene"
     # img=./tests/module_genai/cpp/test_data/scene_120_100.png
     img=./tests/module_genai/cpp/test_data/cars-1200-674.jpg
 
-    "$app" -cfg "$cfg" -prompt "$prompt" -img "$img"
+    "$app" -cfg "$cfg" -prompt "$prompt" -img "$img" -warmup 1 -perf 1
 fi
 
 # Run MD Image Generation Sample
