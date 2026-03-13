@@ -7,6 +7,8 @@
 #include <filesystem>
 #include <chrono>
 
+#include <openvino/runtime/core.hpp>
+
 static std::string get_config_ymal_path(int argc, char *argv[]) {
     if (argc > 1) {
         return std::string(argv[1]);
@@ -23,15 +25,24 @@ int test_genai_vlm_pipeline(int argc, char *argv[])
 {
     std::cout << "== Init VLM Pipeline" << std::endl;
     std::string model_path = "/mnt/xiping/ai_nas/profiling_qwen2b_vl_instruction/models/ov/Qwen2.5-VL-3B-Instruct/INT4";
+    model_path = "../openvino.genai/tests/module_genai/cpp/test_models/Qwen2.5-VL-3B-Instruct/INT4";
     std::cout << "  == model_path: " << model_path << std::endl;
 
     ov::AnyMap cfg;
     // cfg["ATTENTION_BACKEND"] = "SDPA";
     cfg["ATTENTION_BACKEND"] = "PA";
 
-    ov::genai::VLMPipeline pipe(model_path, "GPU", cfg);
+    std::string device = "GPU";
+    const auto available_devices = ov::Core().get_available_devices();
+    if (std::find(available_devices.begin(), available_devices.end(), device) == available_devices.end()) {
+        std::cerr << "Device " << device << " is not available. Please check your OpenVINO installation and available devices." << std::endl;
+        device = "CPU";
+    }
+    std::cout << "  == device: " << device << std::endl;
+
+    ov::genai::VLMPipeline pipe(model_path, device, cfg);
     std::string prompt = "Please describle this image";
-    std::string img_path = "../openvino.genai/samples/cpp/module_genai/ut_test_data/cat_120_100.png";
+    std::string img_path = "../openvino.genai/tests/module_genai/cpp/test_data/cat_120_100.png";
     // prompt = "描述这张图像";
     ov::Tensor image = utils::load_image(img_path);
 
