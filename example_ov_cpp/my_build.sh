@@ -12,6 +12,6 @@ cd build
 # Based on myown build openvino.genai
 export CMAKE_PREFIX_PATH="../../openvino.genai/install/runtime/cmake/"
 
-cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake -DCMAKE_BUILD_TYPE=Debug -DENABLE_MODEL_WEIGHTS_MANAGEMENT=OFF ..
 # cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j32

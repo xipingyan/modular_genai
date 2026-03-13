@@ -11,8 +11,6 @@
 #include <cstdlib>
 #include "utils_test_model.hpp"
 
-#if 1
-
 // Return GPU USM memory usage in MB, or -1 if could not query
 inline int get_gpu_usm(ov::Core &core)
 {
@@ -157,6 +155,7 @@ int test_call_ov_directly(int argc, char *argv[])
 
     auto expected_tensor = ov_infer(compiled_model, core, inputs_rt);
 
+#if ENABLE_MODEL_WEIGHTS_MANAGEMENT
     // std::cout << "      Before: release_model_weights = " << get_gpu_usm(core) << " MB" << std::endl;
     compiled_model.release_model_weights();
     // std::cout << "      After: release_model_weights = " << get_gpu_usm(core) << " MB" << std::endl;
@@ -183,7 +182,9 @@ int test_call_ov_directly(int argc, char *argv[])
 
     auto is_same = compare_output(output_tensor, expected_tensor);
     std::cout << "  **** Compare output with expected tensor: " << (is_same ? "[Pass]" : "[Fail]") << std::endl;
+#else
+    std::cout << "Model weights management is disabled. Skipping load_model_weights and release_model_weights calls." << std::endl;
+#endif // ENABLE_MODEL_WEIGHTS_MANAGEMENT
 
     return EXIT_SUCCESS;
 }
-#endif
