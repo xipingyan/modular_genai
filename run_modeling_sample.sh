@@ -29,9 +29,11 @@ fi
 
 cd "${SCRIPT_DIR_RUN_MODELING_SAMPLES}"
 QWEN3_OMNI="${QWEN3_OMNI:-0}"
+QWEN3_OMNI_TTS="${QWEN3_OMNI_TTS:-0}"
 
 echo "Running GenAI samples with settings:"
 echo "  QWEN3_OMNI=$QWEN3_OMNI"
+echo "  QWEN3_OMNI_TTS=$QWEN3_OMNI_TTS"
 
 # export DEVICE=GPU             # Specific device for testing, default is CPU
 # export ENABLE_PROFILE=1         # Dump profiling data. default 0.
@@ -41,6 +43,19 @@ echo "  QWEN3_OMNI=$QWEN3_OMNI"
 
 # Run MD Omni Sample
 if [[ "$QWEN3_OMNI" == "1" ]]; then
+    app=./openvino.genai/build/src/cpp/src/modeling/samples/modeling_qwen3_omni
+    model_path=./openvino.genai/tests/module_genai/cpp/test_models/src_model_qwen3_omni_4b/Qwen3-Omni-4B-Instruct-multilingual/
+    prompt="Describe this image and provide a speech response."
+    output_audio="case2_output.wav"
+    input_image=./openvino.genai/tests/module_genai/cpp/test_data/cat_120_100.png
+    dump_ir_dir="./ir_dump"
+
+    "$app" --model-dir "$model_path" --image "$input_image" --prompt "$prompt" \
+        --output-tokens 32 --precision "inf_fp32_kv_fp32_w_int8" --device CPU \
+        --dump-ir-dir "$dump_ir_dir"
+fi
+
+if [[ "$QWEN3_OMNI_TTS" == "1" ]]; then
     # modeling_qwen3_omni
     # modeling_qwen3_omni_tts_min
     app=./openvino.genai/build/src/cpp/src/modeling/samples/modeling_qwen3_omni_tts_min
