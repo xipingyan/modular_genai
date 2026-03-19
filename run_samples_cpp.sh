@@ -53,6 +53,7 @@ fi
 if [[ "$RUN_OMNI" == "1" ]]; then
     app=./build/samples/cpp/module_genai/md_omni
     img=./tests/module_genai/cpp/test_data/scene_120_100.png
+    cache_dir=./cache_dir_qwen3_omni
 
     # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_image_cpu.yaml
     # prompt="Please describe the scene"
@@ -63,10 +64,13 @@ if [[ "$RUN_OMNI" == "1" ]]; then
     image=./tests/module_genai/cpp/test_data/london.jpg
     # https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/cough.wav
     audio=./tests/module_genai/cpp/test_data/thunder-and-rain-sounds.wav
-    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_audio_image_video_tts_cpu.yaml
+    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_audio_image_video_tts_int4.yaml
     prompt="You are a weather bot. I'm showing you my current location and a forecast report. Look at the window (video) and listen to the environment. Is the forecast accurate? Respond with a summary and a voice alert."
     # "$app" -h
-    "$app" -cfg "$cfg" -video "$video" -img "$image" -audio "$audio" -prompt "$prompt" --use_audio_in_video 0 -tts 1 # -warmup 1 -perf 1
+    "$app" -cfg "$cfg" -video "$video" -img "$image" -audio "$audio" -prompt "$prompt" \
+        -use_audio_in_video 0 -tts 1 \
+        -cache_dir "$cache_dir" \
+        -warmup 1 -perf 1
 fi
 
 # Run MD Image Generation Sample
