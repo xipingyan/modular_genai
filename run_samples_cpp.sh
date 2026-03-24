@@ -34,7 +34,7 @@ echo "  RUN_GEN_IMG=$RUN_GEN_IMG"
 echo "  RUN_GEN_VIDEO=$RUN_GEN_VIDEO"
 
 # export DEVICE=GPU             # Specific device for testing, default is CPU
-export ENABLE_PROFILE=1         # Dump profiling data. default 0.
+# export ENABLE_PROFILE=1         # Dump profiling data. default 0.
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
 # export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
@@ -60,15 +60,24 @@ if [[ "$RUN_OMNI" == "1" ]]; then
     # img=./tests/module_genai/cpp/test_data/cars-1200-674.jpg
     # "$app" -cfg "$cfg" -prompt "$prompt" -img "$img" -warmup 1 -perf 1 -device CPU
 
-    video=./tests/module_genai/cpp/test_data/rainning_480p_16khz_2s.mp4
-    image=./tests/module_genai/cpp/test_data/london.jpg
-    # https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/cough.wav
-    audio=./tests/module_genai/cpp/test_data/thunder-and-rain-sounds.wav
-    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_audio_image_video_tts_int4.yaml
-    prompt="You are a weather bot. I'm showing you my current location and a forecast report. Look at the window (video) and listen to the environment. Is the forecast accurate? Respond with a summary and a voice alert."
-    # "$app" -h
-    "$app" -cfg "$cfg" -video "$video" -img "$image" -audio "$audio" -prompt "$prompt" \
-        -use_audio_in_video 0 -tts 1 \
+    # # video+image+audio prompt -> text + tts
+    # video=./tests/module_genai/cpp/test_data/rainning_480p_16khz_2s.mp4
+    # image=./tests/module_genai/cpp/test_data/london.jpg
+    # # https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/cough.wav
+    # audio=./tests/module_genai/cpp/test_data/thunder-and-rain-sounds.wav
+    # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_audio_image_video_tts_int4.yaml
+    # prompt="You are a weather bot. I'm showing you my current location and a forecast report. Look at the window (video) and listen to the environment. Is the forecast accurate? Respond with a summary and a voice alert."
+    # # "$app" -h
+    # "$app" -cfg "$cfg" -video "$video" -img "$image" -audio "$audio" -prompt "$prompt" \
+    #     -use_audio_in_video 0 -tts 1 \
+    #     -cache_dir "$cache_dir" \
+    #     -warmup 1 -perf 1
+
+    # prompt -> tts
+    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_tts_int4.yaml
+    prompt="你好，明天天气怎么样？如果天气不错，一起出去打羽毛球怎么样？"  # "Hello, how's the weather today?" in Chinese
+    "$app" -cfg "$cfg" -prompt "$prompt" \
+        -tts 1 \
         -cache_dir "$cache_dir" \
         -warmup 1 -perf 1
 fi
