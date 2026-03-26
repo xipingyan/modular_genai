@@ -34,7 +34,7 @@ echo "  RUN_GEN_IMG=$RUN_GEN_IMG"
 echo "  RUN_GEN_VIDEO=$RUN_GEN_VIDEO"
 
 # export DEVICE=GPU             # Specific device for testing, default is CPU
-# export ENABLE_PROFILE=1         # Dump profiling data. default 0.
+# export ENABLE_PROFILE=1       # Dump profiling data. default 0.
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
 # export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
@@ -61,6 +61,7 @@ if [[ "$RUN_OMNI" == "1" ]]; then
     # "$app" -cfg "$cfg" -prompt "$prompt" -img "$img" -warmup 1 -perf 1 -device CPU
 
     # # video+image+audio prompt -> text + tts
+    # =============================================================================
     # video=./tests/module_genai/cpp/test_data/rainning_480p_16khz_2s.mp4
     # image=./tests/module_genai/cpp/test_data/london.jpg
     # # https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/cough.wav
@@ -73,13 +74,22 @@ if [[ "$RUN_OMNI" == "1" ]]; then
     #     -cache_dir "$cache_dir" \
     #     -warmup 1 -perf 1
 
-    # prompt -> tts
-    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_tts_int4.yaml
-    prompt="你好，明天天气怎么样？如果天气不错，一起出去打羽毛球怎么样？"  # "Hello, how's the weather today?" in Chinese
-    "$app" -cfg "$cfg" -prompt "$prompt" \
-        -tts 1 \
+    # # prompt -> tts
+    # # =============================================================================
+    # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_tts_int4.yaml
+    # prompt="你好，明天天气怎么样？如果天气不错，一起出去打羽毛球怎么样？"
+    # "$app" -cfg "$cfg" -prompt "$prompt" \
+    #     -tts 1 \
+    #     -cache_dir "$cache_dir" \
+    #     -warmup 1 -perf 1
+
+    # prompt -> text
+    # =============================================================================
+    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt.yaml
+    prompt="中国最发达的城市是哪个？使用json格式回答，例如：{'answer': '郑州'}，只回答json，不要其他多余的文字。"
+    "$app" -cfg "$cfg" -prompt "$prompt" -tts 0 \
         -cache_dir "$cache_dir" \
-        -warmup 1 -perf 1
+        -warmup 0 -perf 1
 fi
 
 # Run MD Image Generation Sample
