@@ -8,3 +8,5 @@ dumped_config.yaml
 __pycache__
 data
 *.wav
+composable_pipeline
+visualize_openvino_ir
