@@ -60,19 +60,19 @@ if [[ "$RUN_OMNI" == "1" ]]; then
     # img=./tests/module_genai/cpp/test_data/cars-1200-674.jpg
     # "$app" -cfg "$cfg" -prompt "$prompt" -img "$img" -warmup 1 -perf 1 -device CPU
 
-    # # video+image+audio prompt -> text + tts
+    # video+image+audio prompt -> text + tts
     # =============================================================================
-    # video=./tests/module_genai/cpp/test_data/rainning_480p_16khz_2s.mp4
-    # image=./tests/module_genai/cpp/test_data/london.jpg
-    # # https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/cough.wav
-    # audio=./tests/module_genai/cpp/test_data/thunder-and-rain-sounds.wav
-    # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_audio_image_video_tts_int4.yaml
-    # prompt="You are a weather bot. I'm showing you my current location and a forecast report. Look at the window (video) and listen to the environment. Is the forecast accurate? Respond with a summary and a voice alert."
-    # # "$app" -h
-    # "$app" -cfg "$cfg" -video "$video" -img "$image" -audio "$audio" -prompt "$prompt" \
-    #     -use_audio_in_video 0 -tts 1 \
-    #     -cache_dir "$cache_dir" \
-    #     -warmup 1 -perf 1
+    video=./tests/module_genai/cpp/test_data/rainning_480p_16khz_2s.mp4
+    image=./tests/module_genai/cpp/test_data/london.jpg
+    # https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/cough.wav
+    audio=./tests/module_genai/cpp/test_data/thunder-and-rain-sounds.wav
+    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_audio_image_video_tts_int4.yaml
+    prompt="You are a weather bot. I'm showing you my current location and a forecast report. Look at the window (video) and listen to the environment. Is the forecast accurate? Respond with a summary and a voice alert."
+    # "$app" -h
+    "$app" -cfg "$cfg" -video "$video" -img "$image" -audio "$audio" -prompt "$prompt" \
+        -use_audio_in_video 0 -tts 0 \
+        -cache_dir "$cache_dir" \
+        -warmup 0 -perf 1
 
     # # prompt -> tts
     # # =============================================================================
@@ -83,13 +83,13 @@ if [[ "$RUN_OMNI" == "1" ]]; then
     #     -cache_dir "$cache_dir" \
     #     -warmup 1 -perf 1
 
-    # prompt -> text
-    # =============================================================================
-    cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt.yaml
-    prompt="中国最发达的城市是哪个？使用json格式回答，例如：{'answer': '郑州'}，只回答json，不要其他多余的文字。"
-    "$app" -cfg "$cfg" -prompt "$prompt" -tts 0 \
-        -cache_dir "$cache_dir" \
-        -warmup 0 -perf 1
+    # # prompt -> text
+    # # =============================================================================
+    # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt.yaml
+    # prompt="中国最发达的城市是哪个？使用json格式回答，例如：{'answer': '郑州'}，只回答json，不要其他多余的文字。"
+    # "$app" -cfg "$cfg" -prompt "$prompt" -tts 0 \
+    #     -cache_dir "$cache_dir" \
+    #     -warmup 0 -perf 1
 fi
 
 # Run MD Image Generation Sample
