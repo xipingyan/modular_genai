@@ -65,10 +65,10 @@ fi
 
 # Run MD Omni Sample
 if [[ "$QWEN3_OMNI" == "1" ]]; then
-    video=./tests/module_genai/cpp/test_data/rainning_480p_16khz_2s.mp4
-    image=./tests/module_genai/cpp/test_data/london.jpg
+    video=./tests/cpp/test_data/rainning_480p_16khz_2s.mp4
+    image=./tests/cpp/test_data/london.jpg
     # https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen3-Omni/demo/cough.wav
-    audio=./tests/module_genai/cpp/test_data/thunder-and-rain-sounds.wav
+    audio=./tests/cpp/test_data/thunder-and-rain-sounds.wav
     prompt="You are a weather bot. I'm showing you my current location and a forecast report. Look at the window (video) and listen to the environment. Is the forecast accurate? Respond with a summary and a voice alert."
 
     cfg=./samples/config_yaml/Qwen3_omni/config_prompt_audio_image_video_tts_int4.yaml
