@@ -41,7 +41,7 @@ fi
 
 cd "${SCRIPT_DIR_RUN_CP_CPP_SAMPLES}/composable_pipeline"
 QWEN2_5="${QWEN2_5:-0}"
-QWEN3_OMNI="${QWEN3_OMNI:-0}"
+QWEN3_OMNI="${QWEN3_OMNI:-1}"
 
 echo "Running Composable Pipeline samples with settings:"
 echo "  QWEN2_5=$QWEN2_5"
@@ -51,7 +51,7 @@ echo "  QWEN3_OMNI=$QWEN3_OMNI"
 # export ENABLE_PROFILE=1       # Dump profiling data. default 0.
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
-# export OPENVINO_LOG_LEVEL=3     # Set OpenVINO log level.
+export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
 
 app=./build/samples/yaml_pipeline_sample
 
@@ -72,14 +72,18 @@ if [[ "$QWEN3_OMNI" == "1" ]]; then
     prompt="You are a weather bot. I'm showing you my current location and a forecast report. Look at the window (video) and listen to the environment. Is the forecast accurate? Respond with a summary and a voice alert."
 
     cfg=./samples/config_yaml/Qwen3_omni/config_prompt_audio_image_video_tts_int4.yaml
+    cfg=./samples/config_yaml/Qwen3_omni/config_prompt_audio_image_video.yaml
+    cfg=./samples/config_yaml/Qwen3_omni/config_prompt_audio_image_video_split_llm_cb.yaml
+    # $app "$cfg" \
+    #     "videos=$video" \
+    #     "images=$image" \
+    #     "prompts=$prompt" \
+    #     "audios=$audio" \
+    #     "use_audio_in_video=0"
 
-    $app "$cfg" \
-        "videos=$video" \
-        "images=$image" \
-        "prompts=$prompt" \
-        "audios=$audio" \
-        "use_audio_in_video=1"
-
+    cfg=./samples/config_yaml/Qwen3_omni/config_prompt_image_bus_cb.yaml
+    $app "$cfg" "images=$image" "prompts=$prompt"
+    
     # # prompt -> tts
     # # =============================================================================
     # cfg=./samples/cpp/module_genai/config_yaml/Qwen3-Omni/config_prompt_tts_int4.yaml

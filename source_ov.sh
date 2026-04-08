@@ -21,7 +21,8 @@ if [ $USE_NIGHT_OV = "1" ]; then
 else
     echo "-------------- Use my build OV"
     source ./openvino/build/install/setupvars.sh
-    export OV_PATH=$SCRIPT_MY_OV_DIR/openvino/build
+    export OV_PATH=$SCRIPT_MY_OV_DIR/openvino
+    export OV_PATH_BUILD=$OV_PATH/build
 
     # source ../openvino-new-arch/openvino/build/install/setupvars.sh
     # export OV_PATH=$SCRIPT_MY_OV_DIR/../openvino-new-arch/openvino/build
