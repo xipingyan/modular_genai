@@ -21,25 +21,16 @@ set +u
 source ./source_ov.sh
 set -u
 
-# Load OpenVINO GenAI runtime (for extension ops like SpecialTokensSplit).
-GENAI_INSTALL="${GENAI_INSTALL:-${SCRIPT_DIR_RUN_CP_CPP_SAMPLES}/composable_pipeline/thirdparty/openvino.genai/build/install}"
-if [[ -f "${GENAI_INSTALL}/setupvars.sh" ]]; then
-    set +u
-    # shellcheck disable=SC1090
-    source "${GENAI_INSTALL}/setupvars.sh"
-    set -u
-elif [[ -d "${GENAI_INSTALL}/runtime/lib" ]]; then
-    export LD_LIBRARY_PATH="${GENAI_INSTALL}/runtime/lib:${LD_LIBRARY_PATH:-}"
-fi
+CP_REPOS_DIR="${SCRIPT_DIR_RUN_CP_CPP_SAMPLES}/composable_pipeline"
 
 if [[ -z "${OPENVINO_TOKENIZERS_PATH:-}" ]]; then
-    TOKENIZERS_SO="${GENAI_INSTALL}/runtime/lib/intel64/libopenvino_tokenizers.so"
+    TOKENIZERS_SO="${CP_REPOS_DIR}/build/openvino_genai/libopenvino_tokenizers.so"
     if [[ -f "$TOKENIZERS_SO" ]]; then
         export OPENVINO_TOKENIZERS_PATH="$TOKENIZERS_SO"
     fi
 fi
 
-cd "${SCRIPT_DIR_RUN_CP_CPP_SAMPLES}/composable_pipeline"
+cd "${CP_REPOS_DIR}"
 QWEN2_5="${QWEN2_5:-0}"
 QWEN3_OMNI="${QWEN3_OMNI:-1}"
 
@@ -51,7 +42,7 @@ echo "  QWEN3_OMNI=$QWEN3_OMNI"
 # export ENABLE_PROFILE=1       # Dump profiling data. default 0.
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
-export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
+# export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
 
 app=./build/samples/yaml_pipeline_sample
 
