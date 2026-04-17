@@ -42,7 +42,7 @@ echo "  QWEN3_OMNI=$QWEN3_OMNI"
 # export ENABLE_PROFILE=1       # Dump profiling data. default 0.
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
-# export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
+export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
 
 app=./build/samples/yaml_pipeline_sample
 
@@ -65,15 +65,16 @@ if [[ "$QWEN3_OMNI" == "1" ]]; then
     cfg=./samples/config_yaml/Qwen3_omni/config_prompt_audio_image_video_tts_int4.yaml
     cfg=./samples/config_yaml/Qwen3_omni/config_prompt_audio_image_video.yaml
     cfg=./samples/config_yaml/Qwen3_omni/config_prompt_audio_image_video_split_llm_cb.yaml
-    # $app "$cfg" \
-    #     "videos=$video" \
-    #     "images=$image" \
-    #     "prompts=$prompt" \
-    #     "audios=$audio" \
-    #     "use_audio_in_video=0"
+    cfg=./samples/config_yaml/Qwen3_omni/config_prompt_audio_image_video_runtime_split_llm_cb_cpu.yaml
+    $app "$cfg" \
+        "videos=$video" \
+        "images=$image" \
+        "prompts=$prompt" \
+        "audios=$audio" \
+        "use_audio_in_video=0"
 
-    cfg=./samples/config_yaml/Qwen3_omni/config_prompt_image_bus_cb.yaml
-    $app "$cfg" "images=$image" "prompts=$prompt"
+    # cfg=./samples/config_yaml/Qwen3_omni/config_prompt_image_bus_cb.yaml
+    # $app "$cfg" "images=$image" "prompts=$prompt"
     
     # # prompt -> tts
     # # =============================================================================
