@@ -23,11 +23,11 @@ BUILD_TYPE=Debug
 # Otherwise CMake may find a cached/prebuilt OpenVINOGenAI package and skip
 # recompiling changes under thirdparty/openvino.genai/src/...
 unset OpenVINOGenAI_DIR
-cmake --preset full -DOpenVINO_DIR=$OV_PATH -B build -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4 \
+cmake --preset full -DOpenVINO_DIR=$OV_PATH_CMAKE -B build -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4 \
 	-DCMAKE_DISABLE_FIND_PACKAGE_OpenVINOGenAI=OFF \
 	-DOpenVINOGenAI_DIR=/__force_use_submodule_openvino_genai__
 
-# cmake --preset full -DOpenVINO_DIR=$OV_PATH -B build -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4
+# cmake --preset full -DOpenVINO_DIR=$OV_PATH_CMAKE -B build -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4
 
 cmake --build build --config "$BUILD_TYPE" -j 200
 cmake --install ./build/ --config "$BUILD_TYPE" --prefix ./build/install

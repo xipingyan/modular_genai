@@ -23,6 +23,7 @@ else
     source ./openvino/build/install/setupvars.sh
     export OV_PATH=$SCRIPT_MY_OV_DIR/openvino
     export OV_PATH_BUILD=$OV_PATH/build
+    export OV_PATH_CMAKE=$SCRIPT_MY_OV_DIR/openvino/build/install/runtime/cmake
 
     # source ../openvino-new-arch/openvino/build/install/setupvars.sh
     # export OV_PATH=$SCRIPT_MY_OV_DIR/../openvino-new-arch/openvino/build

@@ -43,6 +43,7 @@ echo "  QWEN3_OMNI=$QWEN3_OMNI"
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
 export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
+# export WARMUP=1                # Run one warmup iteration before measuring performance.
 
 app=./build/samples/yaml_pipeline_sample
 
