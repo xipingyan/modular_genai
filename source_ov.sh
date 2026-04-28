@@ -20,9 +20,9 @@ if [ $USE_NIGHT_OV = "1" ]; then
     fi
 else
     echo "-------------- Use my build OV"
-    export OV_PATH=$SCRIPT_MY_OV_DIR/openvino
+    # export OV_PATH=$SCRIPT_MY_OV_DIR/openvino
     export OV_PATH=$SCRIPT_MY_OV_DIR/composable_pipeline/thirdparty/openvino
-    source $OV_PATH/build/install/setupvars.sh
+    source ${OV_PATH}/build/install/setupvars.sh
     export OV_PATH_BUILD=$OV_PATH/build
     export OV_PATH_CMAKE=$OV_PATH/build/install/runtime/cmake
 
