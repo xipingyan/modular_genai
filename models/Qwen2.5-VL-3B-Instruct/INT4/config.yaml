@@ -5,6 +5,7 @@ global_context:
   default_device: "GPU"
   enable_shared_memory: True
   device_id: "GPU.0"
+  model_type: "qwen2.5_vl"  # 可选项，可能用于模型特定的预处理或后处理逻辑
 
 # ----------------------------------------------------------------------
 # 模块定义 (MODULES DEFINITION) - 修正了 YAML 引用和参数格式
