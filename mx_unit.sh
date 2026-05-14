@@ -39,10 +39,16 @@ cd "${CP_REPOS_DIR}"
 # export OPENVINO_LOG_LEVEL=3     # Set OpenVINO log level.
 
 export MODEL_DIR=${CP_REPOS_DIR}/tests/test_models
+export TINY_MODEL_DIR=${CP_REPOS_DIR}/tests/data/tiny_models
 export DATA_DIR=${CP_REPOS_DIR}/tests/test_data
 
 # ./build/tests/composable_pipeline_tests --gtest_filter="*LLMEmbeddingFusionModuleIntegrationTest*"
 # ./build/tests/composable_pipeline_tests 
 # --gtest_filter="*ImagePreprocesModuleTest*"
 
-./build/tests/composable_pipeline_tests --gtest_filter="*Component_GenAI_VLMPipeline*"
+./build/tests/composable_pipeline_tests --gtest_filter="*Component_GenAI_LLMPipeline*"
+# ./build/tests/composable_pipeline_tests --gtest_filter="*Component_GenAI_VLMPipeline*"
+# ./build/tests/composable_pipeline_tests --gtest_filter="*Component_GenAI_CBPipeline*"
+
+# ./build/tests/composable_pipeline_tests --gtest_filter="Paths/Component_GenAI_VLMPipeline.Construction_And_Routing/UpstreamPath"
+# "Paths/Component_GenAI_VLMPipeline.*"
