@@ -42,13 +42,23 @@ export MODEL_DIR=${CP_REPOS_DIR}/tests/test_models
 export TINY_MODEL_DIR=${CP_REPOS_DIR}/tests/data/tiny_models
 export DATA_DIR=${CP_REPOS_DIR}/tests/test_data
 
-# ./build/tests/composable_pipeline_tests --gtest_filter="*LLMEmbeddingFusionModuleIntegrationTest*"
-# ./build/tests/composable_pipeline_tests 
+# ./build/tests/pipeline_tests --gtest_filter="*LLMEmbeddingFusionModuleIntegrationTest*"
+# ./build/tests/pipeline_tests 
 # --gtest_filter="*ImagePreprocesModuleTest*"
 
-./build/tests/composable_pipeline_tests --gtest_filter="*Component_GenAI_LLMPipeline*"
-# ./build/tests/composable_pipeline_tests --gtest_filter="*Component_GenAI_VLMPipeline*"
-# ./build/tests/composable_pipeline_tests --gtest_filter="*Component_GenAI_CBPipeline*"
+# ./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_LLMPipeline*"
+# ./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_VLMPipeline*"
+# ./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_CBPipeline*"
+# ./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_WhisperPipeline*"
+./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_Text2SpeechPipeline*"
 
-# ./build/tests/composable_pipeline_tests --gtest_filter="Paths/Component_GenAI_VLMPipeline.Construction_And_Routing/UpstreamPath"
+# unit test for GenAI Whisper pipeline
+# ==================================================
+# ./build/tests/pipeline_tests --gtest_filter="*GenAiWhisperFacade*"
+# ./build/tests/pipeline_tests --gtest_filter="*GenAiText2SpeechFacade*"
+
+# ./build/tests/pipeline_tests --gtest_filter="PipelineTest.ValidConfigFromFile"
+
+
+# ./build/tests/pipeline_tests --gtest_filter="Paths/Component_GenAI_VLMPipeline.Construction_And_Routing/UpstreamPath"
 # "Paths/Component_GenAI_VLMPipeline.*"
