@@ -39,7 +39,7 @@ export DEVICE=GPU             # Specific device for testing, default is CPU
 # export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
 # export WARMUP=1               # Run one warmup iteration before measuring performance.
 
-app=./build/samples/yaml_pipeline_sample
+app=./bin/intel64/Release//yaml_pipeline_sample
 
 # MX API
 cfg_yaml=./samples/config_yaml/Qwen3_omni/config_image_cb.yaml
@@ -50,7 +50,7 @@ $app "$cfg_yaml" "images=./tests/test_data/cars-1200-674.jpg" "prompts=describe 
 # $app "$cfg_yaml" "prompt=Say hi, just respond with Hello."
 
 
-app_genai=./build/samples/genai_compatible/cpp/genai_visual_language_chat
+# app_genai=./bin/intel64/Release/genai_compatible/cpp/genai_visual_language_chat
 # # Shadow API tests
 # # ================================================================================
 # MODEL_DIR="../composable_pipeline/tests/test_models/qwen2.5-vl-3b-instruct/"

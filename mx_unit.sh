@@ -42,23 +42,23 @@ export MODEL_DIR=${CP_REPOS_DIR}/tests/test_models
 export TINY_MODEL_DIR=${CP_REPOS_DIR}/tests/data/tiny_models
 export DATA_DIR=${CP_REPOS_DIR}/tests/test_data
 
-# ./build/tests/pipeline_tests --gtest_filter="*LLMEmbeddingFusionModuleIntegrationTest*"
-# ./build/tests/pipeline_tests 
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="*LLMEmbeddingFusionModuleIntegrationTest*"
+# ./bin/intel64/Release/pipeline_tests 
 # --gtest_filter="*ImagePreprocesModuleTest*"
 
-# ./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_LLMPipeline*"
-# ./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_VLMPipeline*"
-# ./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_CBPipeline*"
-# ./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_WhisperPipeline*"
-./build/tests/pipeline_tests --gtest_filter="*Component_GenAI_Text2SpeechPipeline*"
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_LLMPipeline*"
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_VLMPipeline*"
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_CBPipeline*"
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_WhisperPipeline*"
+./bin/intel64/Release/pipeline_tests --gtest_filter="*VisionAttentionMask*"
 
 # unit test for GenAI Whisper pipeline
 # ==================================================
-# ./build/tests/pipeline_tests --gtest_filter="*GenAiWhisperFacade*"
-# ./build/tests/pipeline_tests --gtest_filter="*GenAiText2SpeechFacade*"
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="*GenAiWhisperFacade*"
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="*GenAiText2SpeechFacade*"
 
-# ./build/tests/pipeline_tests --gtest_filter="PipelineTest.ValidConfigFromFile"
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="PipelineTest.ValidConfigFromFile"
 
 
-# ./build/tests/pipeline_tests --gtest_filter="Paths/Component_GenAI_VLMPipeline.Construction_And_Routing/UpstreamPath"
+# ./bin/intel64/Release/pipeline_tests --gtest_filter="Paths/Component_GenAI_VLMPipeline.Construction_And_Routing/UpstreamPath"
 # "Paths/Component_GenAI_VLMPipeline.*"
