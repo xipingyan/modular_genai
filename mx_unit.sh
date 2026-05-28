@@ -21,7 +21,7 @@ set +u
 source ./source_mx_ov.sh
 set -u
 
-CP_REPOS_DIR="${SCRIPT_DIR_RUN_MX_TEST}/openvino.mx"
+CP_REPOS_DIR="${SCRIPT_DIR_RUN_MX_TEST}/openvino.pipeline.mx"
 
 if [[ -z "${OPENVINO_TOKENIZERS_PATH:-}" ]]; then
     TOKENIZERS_SO="${CP_REPOS_DIR}/build/openvino_genai/libopenvino_tokenizers.so"
@@ -50,7 +50,22 @@ export DATA_DIR=${CP_REPOS_DIR}/tests/test_data
 # ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_VLMPipeline*"
 # ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_CBPipeline*"
 # ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_WhisperPipeline*"
-./bin/intel64/Release/pipeline_tests --gtest_filter="*VisionAttentionMask*"
+./bin/intel64/Release/pipeline_tests --gtest_filter="ModuleTestSuite/ClipTextEncoderModuleTest.ModuleTest*"
+
+# [  SKIPPED ] Qwen3VLVisionPreprocessFactory.FactoryReturnsNonNull
+# [  SKIPPED ] Qwen3VLVisionPreprocessFactory.FactoryReturnsCorrectType
+# [  SKIPPED ] Qwen3VLVisionPreprocess.PreprocessRejectsSimultaneousImagesAndVideos
+# [  SKIPPED ] Qwen3VLVisionPreprocess.PreprocessSingleImage_ProducesPixelValues
+# [  SKIPPED ] Qwen3VLImagePreprocessModule.ConstructionSucceeds
+# [  SKIPPED ] Qwen3VLImagePreprocessModule.SingleImage_ProducesSourceSize
+# [  SKIPPED ] Qwen3VLVisionEncoderConstruction.ModelTypeGateAcceptsQwen3VL
+# [  SKIPPED ] Qwen3VLVisionEncoderConstruction.Qwen3VLVisionEncoderInitializesWithSafetensors
+# [  SKIPPED ] Qwen3VLSDPABackendTest.SDPABackendInitializesForQwen3VL
+# [  SKIPPED ] Qwen3VLSDPABackendTest.SDPABackendUsesInputIdsPath
+# [  SKIPPED ] Qwen3VLSDPABackendTest.SDPABackendNameIsSDPA
+# [  SKIPPED ] Qwen3VLConfigTest.FromJsonFile_RealModel
+# [  SKIPPED ] Qwen3VLYamlPipeline.PipelineConstructsFromYaml
+# [  SKIPPED ] Qwen3VLYamlPipeline.PipelineGeneratesOutput
 
 # unit test for GenAI Whisper pipeline
 # ==================================================

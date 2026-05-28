@@ -9,4 +9,5 @@ __pycache__
 data
 *.wav
 composable_pipeline
+openvino.pipeline.mx
 visualize_openvino_ir

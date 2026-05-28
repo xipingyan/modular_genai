@@ -1,15 +1,15 @@
 
 set -eo pipefail
 
-SCRIPT_DIR_BUILD_GENAI="$(dirname "$(readlink -f "$BASH_SOURCE")")"
-cd "${SCRIPT_DIR_BUILD_GENAI}"
+SCRIPT_DIR_BUILD_PIPELINE_MX="$(dirname "$(readlink -f "$BASH_SOURCE")")"
+cd "${SCRIPT_DIR_BUILD_PIPELINE_MX}"
 
 source ./python-env/bin/activate
 source ./source_mx_ov.sh
 
-echo "${SCRIPT_DIR_BUILD_GENAI}"
+echo "${SCRIPT_DIR_BUILD_PIPELINE_MX}"
 
-cd openvino.mx
+cd openvino.pipeline.mx
 
 BUILD_TYPE=Release
 # BUILD_TYPE=Debug
