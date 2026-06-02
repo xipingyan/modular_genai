@@ -39,11 +39,19 @@ export DEVICE=GPU             # Specific device for testing, default is CPU
 # export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
 # export WARMUP=1               # Run one warmup iteration before measuring performance.
 
-app=./bin/intel64/Release//yaml_pipeline_sample
+BUILD_TYPE=Release
+BUILD_TYPE=Debug
+app=./bin/intel64/${BUILD_TYPE}/yaml_pipeline_sample
 
-# MX API
-cfg_yaml=./samples/config_yaml/Qwen3_omni/config_image_cb.yaml
-$app "$cfg_yaml" "images=./tests/test_data/cars-1200-674.jpg" "prompts=describe the image"
+# # MX API
+# # ===========================================================
+# # Qwen3-omni
+# cfg_yaml=./samples/config_yaml/Qwen3_omni/config_image_cb.yaml
+# $app "$cfg_yaml" "images=./tests/test_data/cars-1200-674.jpg" "prompts=describe the image"
+
+# qwen2.5 tiny test
+cfg_yaml=./samples/config_yaml/Qwen2.5-VL-3B-Instruct/config_prompt_image_cb.yaml
+$app "$cfg_yaml" "image=./tests/test_data/dog_120_120.png" "prompt=describe the image"
 
 # # MX API LLM
 # cfg_yaml=./tests/data/tiny_models/tiny_llm_phi_2_with_yaml/config.yaml

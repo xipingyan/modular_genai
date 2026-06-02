@@ -28,6 +28,7 @@ BUILD_TYPE=Debug
 unset OpenVINOGenAI_DIR
 cmake --preset full -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DOpenVINO_DIR=$OV_PATH_CMAKE -B build -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4 \
 	-DCMAKE_DISABLE_FIND_PACKAGE_OpenVINOGenAI=OFF \
+	-DENABLE_PROFILING_ITT=ON \
 	-DOpenVINOGenAI_DIR=/__force_use_submodule_openvino_genai__
 
 # cmake --preset full -DOpenVINO_DIR=$OV_PATH_CMAKE -B build -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4

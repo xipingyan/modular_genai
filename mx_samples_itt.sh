@@ -33,7 +33,7 @@ fi
 cd "${MX_REPOS_DIR}"
 
 export DEVICE=GPU             # Specific device for testing, default is CPU
-# export ENABLE_PROFILE=1       # Dump profiling data. default 0.
+export ENABLE_PROFILE=1       # Dump profiling data. default 0.
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
 # export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
@@ -42,7 +42,10 @@ export DEVICE=GPU             # Specific device for testing, default is CPU
 # VTUNE env.
 # source /opt/intel/oneapi/vtune/latest/vtune-vars.sh
 source /opt/intel/oneapi/setvars.sh
-app=./bin/intel64/Release/yaml_pipeline_sample
+BUILD_TYPE=Release
+BUILD_TYPE=Debug
+
+app=./bin/intel64/${BUILD_TYPE}/yaml_pipeline_sample
 logs_dir=vtune_log_dir
 
 # # MX API
