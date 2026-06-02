@@ -11,6 +11,9 @@ echo "${SCRIPT_DIR_BUILD_PIPELINE_MX}"
 
 cd openvino.pipeline.mx
 
+# Download and prepare OpenVINO GenAI dependencies.
+python scripts/bootstrap_deps.py --stb
+
 BUILD_TYPE=Release
 BUILD_TYPE=Debug
 
