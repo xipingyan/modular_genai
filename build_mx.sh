@@ -12,7 +12,7 @@ echo "${SCRIPT_DIR_BUILD_PIPELINE_MX}"
 cd openvino.pipeline.mx
 
 BUILD_TYPE=Release
-# BUILD_TYPE=Debug
+BUILD_TYPE=Debug
 
 # echo "================================"
 # echo "== Start to build OpenVINO GenAI with new arch OpenVINO."
@@ -23,7 +23,7 @@ BUILD_TYPE=Release
 # Otherwise CMake may find a cached/prebuilt OpenVINOGenAI package and skip
 # recompiling changes under thirdparty/openvino.genai/src/...
 unset OpenVINOGenAI_DIR
-cmake --preset full -DOpenVINO_DIR=$OV_PATH_CMAKE -B build -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4 \
+cmake --preset full -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DOpenVINO_DIR=$OV_PATH_CMAKE -B build -DOpenCV_DIR=/usr/lib/x86_64-linux-gnu/cmake/opencv4 \
 	-DCMAKE_DISABLE_FIND_PACKAGE_OpenVINOGenAI=OFF \
 	-DOpenVINOGenAI_DIR=/__force_use_submodule_openvino_genai__
 

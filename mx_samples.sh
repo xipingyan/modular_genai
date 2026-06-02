@@ -21,7 +21,7 @@ set +u
 source ./source_mx_ov.sh
 set -u
 
-MX_REPOS_DIR="${SCRIPT_DIR_RUN_CP_CPP_SAMPLES}/openvino.mx"
+MX_REPOS_DIR="${SCRIPT_DIR_RUN_CP_CPP_SAMPLES}/openvino.pipeline.mx"
 
 if [[ -z "${OPENVINO_TOKENIZERS_PATH:-}" ]]; then
     TOKENIZERS_SO="${MX_REPOS_DIR}/build/openvino_genai/libopenvino_tokenizers.so"

@@ -42,38 +42,13 @@ export MODEL_DIR=${CP_REPOS_DIR}/tests/test_models
 export TINY_MODEL_DIR=${CP_REPOS_DIR}/tests/data/tiny_models
 export DATA_DIR=${CP_REPOS_DIR}/tests/test_data
 
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="*LLMEmbeddingFusionModuleIntegrationTest*"
-# ./bin/intel64/Release/pipeline_tests 
-# --gtest_filter="*ImagePreprocesModuleTest*"
+export BUILD_TYPE=Release
+export BUILD_TYPE=Debug
 
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_LLMPipeline*"
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_VLMPipeline*"
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_CBPipeline*"
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="*Component_GenAI_WhisperPipeline*"
-./bin/intel64/Release/pipeline_tests --gtest_filter="ModuleTestSuite/ClipTextEncoderModuleTest.ModuleTest*"
+test_app=./bin/intel64/${BUILD_TYPE}/pipeline_tests
 
-# [  SKIPPED ] Qwen3VLVisionPreprocessFactory.FactoryReturnsNonNull
-# [  SKIPPED ] Qwen3VLVisionPreprocessFactory.FactoryReturnsCorrectType
-# [  SKIPPED ] Qwen3VLVisionPreprocess.PreprocessRejectsSimultaneousImagesAndVideos
-# [  SKIPPED ] Qwen3VLVisionPreprocess.PreprocessSingleImage_ProducesPixelValues
-# [  SKIPPED ] Qwen3VLImagePreprocessModule.ConstructionSucceeds
-# [  SKIPPED ] Qwen3VLImagePreprocessModule.SingleImage_ProducesSourceSize
-# [  SKIPPED ] Qwen3VLVisionEncoderConstruction.ModelTypeGateAcceptsQwen3VL
-# [  SKIPPED ] Qwen3VLVisionEncoderConstruction.Qwen3VLVisionEncoderInitializesWithSafetensors
-# [  SKIPPED ] Qwen3VLSDPABackendTest.SDPABackendInitializesForQwen3VL
-# [  SKIPPED ] Qwen3VLSDPABackendTest.SDPABackendUsesInputIdsPath
-# [  SKIPPED ] Qwen3VLSDPABackendTest.SDPABackendNameIsSDPA
-# [  SKIPPED ] Qwen3VLConfigTest.FromJsonFile_RealModel
-# [  SKIPPED ] Qwen3VLYamlPipeline.PipelineConstructsFromYaml
-# [  SKIPPED ] Qwen3VLYamlPipeline.PipelineGeneratesOutput
+$test_app --gtest_filter="GenAiOmniFacade.YamlPath_Generate*"
 
-# unit test for GenAI Whisper pipeline
+# unit test for GenAI Whisper pipeline.
 # ==================================================
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="*GenAiWhisperFacade*"
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="*GenAiText2SpeechFacade*"
-
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="PipelineTest.ValidConfigFromFile"
-
-
-# ./bin/intel64/Release/pipeline_tests --gtest_filter="Paths/Component_GenAI_VLMPipeline.Construction_And_Routing/UpstreamPath"
-# "Paths/Component_GenAI_VLMPipeline.*"
+# $test_app --gtest_filter="*GenAiWhisperFacade*"
