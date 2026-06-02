@@ -54,4 +54,4 @@ logs_dir=vtune_log_dir
 # qwen2.5 tiny test
 cfg_yaml=./samples/config_yaml/Qwen2.5-VL-3B-Instruct/config_prompt_image_cb.yaml
 # vtune -collect gpu-hotspots -r $logs_dir -knob gpu-sampling-interval=0.1 -- $app "$cfg_yaml" "image=./tests/test_data/dog_120_120.png" "prompt=describe the image"
-vtune -collect cpu-hotspots -r $logs_dir -knob gpu-sampling-interval=0.1 -- $app "$cfg_yaml" "image=./tests/test_data/dog_120_120.png" "prompt=describe the image"
+vtune -collect hotspots -r $logs_dir -- $app "$cfg_yaml" "image=./tests/test_data/dog_120_120.png" "prompt=describe the image"
