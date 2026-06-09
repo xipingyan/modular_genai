@@ -17,7 +17,7 @@ BUILD_TYPE=Release
 # BUILD_TYPE=Debug
 
 cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-  -DENABLE_SYSTEM_OPENCL=OFF
+  -DENABLE_SYSTEM_OPENCL=OFF \
   -DOpenVINO_DIR=../openvino/build/install/runtime/cmake/ \
   -DCMAKE_PREFIX_PATH=../openvino/build/install/developer_package/cmake/ \
   -S ./ -B ./build/
