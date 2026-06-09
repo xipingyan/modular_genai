@@ -36,7 +36,7 @@ export DEVICE=GPU             # Specific device for testing, default is CPU
 # export ENABLE_PROFILE=1       # Dump profiling data. default 0.
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
-# export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
+export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
 # export WARMUP=1               # Run one warmup iteration before measuring performance.
 
 BUILD_TYPE=Release
@@ -49,30 +49,52 @@ app=./bin/intel64/${BUILD_TYPE}/yaml_pipeline_sample
 # cfg_yaml=./samples/config_yaml/Qwen3_omni/config_image_cb.yaml
 # $app "$cfg_yaml" "images=./tests/test_data/cars-1200-674.jpg" "prompts=describe the image"
 
-# # MX API：Gemma4
+# # MX API：Gemma4 ov
 # # ===========================================================
 # cfg_yaml=./samples/config_yaml/Gemma4/config_image_audio_sdpa.yaml
-# # cfg_yaml=./samples/config_yaml/Gemma4/config_image_audio_cb.yaml
+# cfg_yaml=./samples/config_yaml/Gemma4/config_image_audio_cb.yaml
 
 # prompt_img="What is shown in this image?"
-# $app "$cfg_yaml" "image=./tests/test_data/cat_120_100.png" "prompt=$prompt_img"
+# $app "$cfg_yaml" "image=./tests/test_data/GoldenGate.png" "prompt=$prompt_img"
 
 # # prompt_audio="Transcribe the following speech segment."
 # # $app "$cfg_yaml" "audio=/home/xiping/mygithub/profiling_ov_genai/example_python/gemma4/journal1.wav" "prompt=$prompt_audio"
 
 # MX API：Gemma4 modeling
 # ===========================================================
+# ======= Text =========
+# cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_text_sdpa.yaml
+# prompt='Write a short joke about saving RAM.'
+# $app "$cfg_yaml" "prompt=$prompt"
+
+# # ======= VLM =========
 # cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_image_sdpa.yaml
 # prompt_img="What is shown in this image?"
 # input_img='./tests/test_data/GoldenGate.png'
 # $app "$cfg_yaml" "image=${input_img}" "prompt=$prompt_img"
 
-cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_audio_sdpa.yaml
-prompt_audio="Transcribe the following speech segment."
-# prompt_audio='Transcribe the following speech segment in its original language. Follow these specific instructions for formatting the answer:\n* Only output the transcription, with no newlines.\n* When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.'
-input_audio='./tests/test_data/journal1.wav'
+# # ======= audio =========
+# cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_audio_sdpa.yaml
+# prompt_audio="Transcribe the following speech segment."
+# # prompt_audio='Transcribe the following speech segment in its original language. Follow these specific instructions for formatting the answer:\n* Only output the transcription, with no newlines.\n* When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.'
+# input_audio='./tests/test_data/journal1.wav'
+# $app "$cfg_yaml" "audio=${input_audio}" "prompt=$prompt_audio"
+
+# # ======= full =========
+input_img=./tests/test_data/GoldenGate.png
+input_audio=./tests/test_data/test.wav
+prompt_audio='transcribe the audio'
+prompt_img="describle this image"
+
+echo "=== SDPA ==="
+cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_text_img_audio_sdpa.yaml
+# $app "$cfg_yaml" "image=${input_img}" "prompt=$prompt_img"
 $app "$cfg_yaml" "audio=${input_audio}" "prompt=$prompt_audio"
 
+# echo ""
+# echo "=== CB ==="
+# cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_text_img_audio_cb.yaml
+# $app "$cfg_yaml" "image=${input_img}" "prompt=$prompt_img"
 
 # # qwen2.5 tiny test
 # cfg_yaml=./samples/config_yaml/Qwen2.5-VL-3B-Instruct/config_prompt_image_cb.yaml
