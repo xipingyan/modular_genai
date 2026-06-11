@@ -38,7 +38,7 @@ prompt='Describe the content of the image and transcribe the audio. For the imag
 dst_dir=./gemma-4-12B-it_ov
 mkdir -p ${dst_dir}
 
-# $modeling_app -h
-$modeling_app $torch_model --prompt "$prompt" --image $img_path --audio $audio_path --device GPU --max-new-tokens 20 --export-ir $dst_dir
+# $modeling_app --compression -h
+$modeling_app $torch_model --prompt "$prompt" --image $img_path --audio $audio_path --device GPU --max-new-tokens 128 --export-ir $dst_dir --compression none
 
 mv ${dst_dir} ./openvino.pipeline.mx/tests/test_models/
