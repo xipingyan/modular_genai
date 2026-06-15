@@ -37,7 +37,8 @@ config_yaml=./samples/config_yaml/Qwen3_omni/config_chat_cb.yaml
 
 chat_json=./samples/cpp/benchmark/examples/case1_comprehensive.json
 echo "===> Running benchmark with conversation: ${chat_json}"
-pipeline_benchmark $config_yaml --conversation "$chat_json" --warmup 0 --iter 1
+pipeline_benchmark $config_yaml --conversation "$chat_json" --warmup 0 --iter 1 --max-frames 32
+
 chat_json=./samples/cpp/benchmark/examples/case2_video_audio_focus.json
 echo "===> Running benchmark with conversation: ${chat_json}"
 pipeline_benchmark $config_yaml --conversation "$chat_json" --warmup 0 --iter 1
