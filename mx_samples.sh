@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
 SCRIPT_DIR_RUN_CP_CPP_SAMPLES="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 cd "${SCRIPT_DIR_RUN_CP_CPP_SAMPLES}"
 
@@ -9,19 +7,11 @@ if [[ ! -f "./python-env/bin/activate" ]]; then
     echo "[ERROR] Missing venv activate script: ./python-env/bin/activate" >&2
     exit 1
 fi
-if [[ ! -f "./source_mx_ov.sh" ]]; then
-    echo "[ERROR] Missing OpenVINO env script: ./source_mx_ov.sh" >&2
-    exit 1
-fi
 
 source ./python-env/bin/activate
 
-# OpenVINO's setup scripts are not always compatible with `set -u` (nounset).
-set +u
-source ./source_mx_ov.sh
-set -u
-
 MX_REPOS_DIR="${SCRIPT_DIR_RUN_CP_CPP_SAMPLES}/openvino.pipeline.mx"
+source ${MX_REPOS_DIR}/build/install/setupvars.sh
 
 if [[ -z "${OPENVINO_TOKENIZERS_PATH:-}" ]]; then
     TOKENIZERS_SO="${MX_REPOS_DIR}/build/openvino_genai/libopenvino_tokenizers.so"
@@ -50,12 +40,12 @@ app=./bin/intel64/${BUILD_TYPE}/yaml_pipeline_sample
 # $app "$cfg_yaml" "images=./tests/test_data/cars-1200-674.jpg" "prompts=describe the image"
 
 # MX API：Gemma4 ov
-# ===========================================================
-cfg_yaml=./samples/config_yaml/Gemma4/config_image_audio_sdpa.yaml
-# cfg_yaml=./samples/config_yaml/Gemma4/config_image_audio_cb.yaml
+# # ===========================================================
+# cfg_yaml=./samples/config_yaml/Gemma4/config_image_audio_sdpa.yaml
+# # cfg_yaml=./samples/config_yaml/Gemma4/config_image_audio_cb.yaml
 
-prompt_img="prompt_img=What is shown in this image? answer in one sentence."
-$app "$cfg_yaml" "image=./tests/test_data/GoldenGate.png" "prompt=$prompt_img"
+# prompt_img="prompt_img=What is shown in this image? answer in one sentence."
+# $app "$cfg_yaml" "image=./tests/test_data/GoldenGate.png" "prompt=$prompt_img"
 
 # prompt_audio="Transcribe the following speech segment."
 # $app "$cfg_yaml" "audio=./tests/test_data/journal1.wav" "prompt=$prompt_audio"
@@ -76,26 +66,26 @@ $app "$cfg_yaml" "image=./tests/test_data/GoldenGate.png" "prompt=$prompt_img"
 # # ======= audio =========
 # cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_audio_sdpa.yaml
 # prompt_audio="Transcribe the following speech segment."
-# # prompt_audio='Transcribe the following speech segment in its original language. Follow these specific instructions for formatting the answer:\n* Only output the transcription, with no newlines.\n* When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.'
+# prompt_audio='Transcribe the following speech segment in its original language. Follow these specific instructions for formatting the answer:\n* Only output the transcription, with no newlines.\n* When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.'
 # input_audio='./tests/test_data/journal1.wav'
 # $app "$cfg_yaml" "audio=${input_audio}" "prompt=$prompt_audio"
 
-# # # ======= full =========
-# input_img=./tests/test_data/GoldenGate.png
-# input_audio=./tests/test_data/test.wav
-# prompt_audio='transcribe the audio'
-# prompt_img="describle this image"
+# # ======= full =========
+input_img=./tests/test_data/GoldenGate.png
+input_audio=./tests/test_data/test.wav
+prompt_audio='transcribe the audio'
+prompt_img="describle this image"
 
 # echo "=== SDPA ==="
 # cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_text_img_sdpa.yaml
 # # $app "$cfg_yaml" "image=${input_img}" "prompt=$prompt_img"
 # $app "$cfg_yaml" "audio=${input_audio}" "prompt=$prompt_audio"
 
-# echo ""
-# echo "=== CB ==="
-# cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_text_img_audio_cb.yaml
-# $app "$cfg_yaml" "image=${input_img}" "prompt=$prompt_img"
-# # $app "$cfg_yaml" "prompt=what is openvino?"
+echo ""
+echo "=== CB ==="
+cfg_yaml=./samples/config_yaml/Gemma4/config_modeling_text_img_audio_cb.yaml
+$app "$cfg_yaml" "image=${input_img}" "prompt=$prompt_img"
+# $app "$cfg_yaml" "prompt=what is openvino?"
 
 # # qwen2.5 tiny test
 # cfg_yaml=./samples/config_yaml/Qwen2.5-VL-3B-Instruct/config_prompt_image_cb.yaml
