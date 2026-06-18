@@ -1,0 +1,49 @@
+{
+  "conversations": [
+    {
+      "turn": 1,
+      "inputs": {
+        "prompt": "<image>Please describe what you see in this image.",
+        "images": "./qwen3_omni/case1/cars.jpg"
+      }
+    },
+    {
+      "turn": 2,
+      "inputs": {
+        "prompt": "<audio>Now listen to this audio, what sound is this?",
+        "audios": "./qwen3_omni/case1/cough.wav"
+      }
+    },
+    {
+      "turn": 3,
+      "inputs": {
+        "prompt": "Can you tell me what the image just now showed and what the audio just now sounded like?"
+      }
+    },
+    {
+      "turn": 4,
+      "inputs": {
+        "prompt": "<video>Now watch this video and tell me what is happening.",
+        "videos": "./qwen3_omni/case1/draw.mp4"
+      }
+    },
+    {
+      "turn": 5,
+      "inputs": {
+        "prompt": "What sound do you hear in the video just now?"
+      }
+    },
+    {
+      "turn": 6,
+      "inputs": {
+        "prompt": "What visual content do you see in the video just now?"
+      }
+    },
+    {
+      "turn": 7,
+      "inputs": {
+        "prompt": "Please summarize all the content we discussed: the image, the audio, and the video."
+      }
+    }
+  ]
+}
