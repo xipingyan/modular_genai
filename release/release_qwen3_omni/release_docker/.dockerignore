@@ -1,0 +1,29 @@
+# Exclude Docker-related files from build context
+release_docker/
+
+# Exclude large model directory (will be mounted at runtime)
+Qwen3-Omni-4B-Instruct-multilingual-int4/
+
+# Ignore development files
+*.log
+*.tmp
+*.swp
+*~
+.git
+.gitignore
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.iml
+
+# Ignore backup files
+*.bak
+*.backup
