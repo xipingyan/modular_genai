@@ -13,7 +13,10 @@ cd openvino.pipeline.mx
 # Bootstrap all dependencies (auto-detects platform)
 python scripts/bootstrap_deps.py
 
+BUILD_TYPE=Release
+# BUILD_TYPE=Debug
+
 # Configure, build, and install
 cmake --preset full
-cmake --build build -j$(nproc)
-cmake --install build --prefix build/install
+cmake --build build --config $BUILD_TYPE -j$(nproc)
+cmake --install build --config $BUILD_TYPE --prefix build/install
