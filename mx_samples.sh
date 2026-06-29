@@ -28,6 +28,7 @@ export DEVICE=GPU             # Specific device for testing, default is CPU
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
 # export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
 # export WARMUP=1               # Run one warmup iteration before measuring performance.
+# export PIPELINE_OV_RELEASE_DIR=none
 
 BUILD_TYPE=Release
 BUILD_TYPE=Debug

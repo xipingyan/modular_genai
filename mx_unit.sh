@@ -28,7 +28,8 @@ cd "${PIPELINEMX_REPOS_DIR}"
 # export ENABLE_PROFILE=1       # Dump profiling data. default 0.
 # export DUMP_YAML=1            # Dump pipeline to YAML file. default 0.
 # export DUMP_PERFORMANCE=1     # Dump performance metrics after generation. default 0.
-# export OPENVINO_LOG_LEVEL=3     # Set OpenVINO log level.
+# export OPENVINO_LOG_LEVEL=3   # Set OpenVINO log level.
+# export PIPELINE_OV_RELEASE_DIR=none  # Force MX path.
 
 export MODEL_DIR=${PIPELINEMX_REPOS_DIR}/tests/test_models
 export TINY_MODEL_DIR=${PIPELINEMX_REPOS_DIR}/tests/data/tiny_models
