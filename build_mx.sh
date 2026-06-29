@@ -10,13 +10,13 @@ echo "${SCRIPT_DIR_BUILD_PIPELINE_MX}"
 
 cd openvino.pipeline.mx
 
-# Bootstrap all dependencies (auto-detects platform)
-python scripts/bootstrap_deps.py
-
 BUILD_TYPE=Release
-# BUILD_TYPE=Debug
+BUILD_TYPE=Debug
+
+# Bootstrap all dependencies (auto-detects platform)
+python scripts/bootstrap_deps.py --build-dir build --build-type $BUILD_TYPE
 
 # Configure, build, and install
-cmake --preset full
+cmake --preset full -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 cmake --build build --config $BUILD_TYPE -j$(nproc)
 cmake --install build --config $BUILD_TYPE --prefix build/install
