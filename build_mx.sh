@@ -11,7 +11,7 @@ echo "${SCRIPT_DIR_BUILD_PIPELINE_MX}"
 cd openvino.pipeline.mx
 
 BUILD_TYPE=Release
-BUILD_TYPE=Debug
+# BUILD_TYPE=Debug
 
 # Bootstrap all dependencies (auto-detects platform)
 python scripts/bootstrap_deps.py --build-dir build --build-type $BUILD_TYPE
